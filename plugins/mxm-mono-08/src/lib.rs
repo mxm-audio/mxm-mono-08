@@ -23,9 +23,22 @@ use actions::TransientActions;
 use mxm_mono_08_dsp::routing::Routing;
 use mxm_mono_08_dsp::spring::Spring;
 use mxm_mono_08_dsp::voice::{Activity, NoteId, Params as VoiceParams, Voice};
+use nice_plug::midi::{Channel, Key, VoiceID};
 use nice_plug::prelude::*;
 use params::MxmMono08Params;
 use std::sync::Arc;
+
+/// A note's identity in the shape the voice logic was written for. nice-plug 0.4 types it
+/// (`VoiceID`, `Channel`, `Key`, each with a wildcard); 0.3 handed over a host's wildcard (-1) as
+/// 255 and a missing voice id as `None`. Converting here keeps every note decision, and every
+/// recorded render, exactly what it was before the upgrade.
+fn legacy_note(voice_id: VoiceID, channel: Channel, key: Key) -> (Option<i32>, u8, u8) {
+    (
+        voice_id.id(),
+        channel.number().unwrap_or(u8::MAX),
+        key.number().unwrap_or(u8::MAX),
+    )
+}
 
 const MAX_BLOCK_SIZE: usize = 64;
 const NUM_CHANNELS: usize = 16;
@@ -292,10 +305,11 @@ impl MxmMono08 {
             NoteEvent::NoteOn {
                 voice_id,
                 channel,
-                note,
+                key,
                 velocity,
                 ..
             } => {
+                let (voice_id, channel, note) = legacy_note(voice_id, channel, key);
                 if velocity <= 0.0 {
                     self.voice.note_off(voice_id, channel, note);
                     self.sync_owner_channel_pressure();
@@ -316,37 +330,41 @@ impl MxmMono08 {
             NoteEvent::NoteOff {
                 voice_id,
                 channel,
-                note,
+                key,
                 ..
             } => {
+                let (voice_id, channel, note) = legacy_note(voice_id, channel, key);
                 self.voice.note_off(voice_id, channel, note);
                 self.sync_owner_channel_pressure();
             }
             NoteEvent::Choke {
                 voice_id,
                 channel,
-                note,
+                key,
                 ..
             } => {
+                let (voice_id, channel, note) = legacy_note(voice_id, channel, key);
                 self.voice.choke(voice_id, channel, note);
                 self.sync_owner_channel_pressure();
             }
             NoteEvent::PolyTuning {
                 voice_id,
                 channel,
-                note,
+                key,
                 tuning,
                 ..
             } if tuning.is_finite() => {
+                let (voice_id, channel, note) = legacy_note(voice_id, channel, key);
                 self.voice.set_tuning(voice_id, channel, note, tuning);
             }
             NoteEvent::PolyPressure {
                 voice_id,
                 channel,
-                note,
+                key,
                 pressure,
                 ..
             } if pressure.is_finite() => {
+                let (voice_id, channel, note) = legacy_note(voice_id, channel, key);
                 self.voice.set_pressure(voice_id, channel, note, pressure);
             }
             NoteEvent::MidiChannelPressure {
@@ -607,6 +625,7 @@ nice_export_clap!(MxmMono08);
 mod tests {
     use super::*;
     use mxm_mono_08_dsp::routing::PULSE_SOURCES;
+    use nice_plug::context::process::SendEventError;
     use std::collections::VecDeque;
 
     struct TestContext {
@@ -622,6 +641,8 @@ mod tests {
         }
     }
     impl ProcessContext<MxmMono08> for TestContext {
+        // A test double has no host to ask for a restart (nice-plug 0.4).
+        fn request_restart(&self) {}
         fn plugin_api(&self) -> PluginApi {
             PluginApi::Clap
         }
@@ -633,7 +654,12 @@ mod tests {
         fn next_event(&mut self) -> Option<NoteEvent<()>> {
             self.events.pop_front()
         }
-        fn send_event(&mut self, _event: NoteEvent<()>) {}
+        fn try_send_event(
+            &mut self,
+            _event: NoteEvent<()>,
+        ) -> Result<(), (NoteEvent<()>, SendEventError)> {
+            Ok(())
+        }
         fn set_latency_samples(&self, _samples: u32) {}
         fn set_current_voice_capacity(&self, _capacity: u32) {}
     }
@@ -667,9 +693,9 @@ mod tests {
     fn note_on(plugin: &mut MxmMono08, channel: u8, note: u8) {
         plugin.handle_event(NoteEvent::NoteOn {
             timing: 0,
-            voice_id: None,
-            channel,
-            note,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(channel),
+            key: Key::Number(note),
             velocity: 0.8,
         });
     }
@@ -798,17 +824,17 @@ mod tests {
         note_on(&mut x, 2, 60);
         x.handle_event(NoteEvent::PolyPressure {
             timing: 0,
-            voice_id: None,
-            channel: 2,
-            note: 60,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(2),
+            key: Key::Number(60),
             pressure: 0.75,
         });
         assert!(x.voice.set_pressure(None, 2, 60, 0.75));
         x.handle_event(NoteEvent::PolyTuning {
             timing: 0,
-            voice_id: None,
-            channel: 2,
-            note: 60,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(2),
+            key: Key::Number(60),
             tuning: 1.5,
         });
         x.handle_event(NoteEvent::MidiPitchBend {
@@ -836,9 +862,9 @@ mod tests {
         // MIDI's velocity-zero NoteOn spelling is the same ownership transition as NoteOff.
         x.handle_event(NoteEvent::NoteOn {
             timing: 0,
-            voice_id: None,
-            channel: 2,
-            note: 60,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(2),
+            key: Key::Number(60),
             velocity: 0.0,
         });
         assert_eq!(
@@ -860,9 +886,9 @@ mod tests {
         });
         x.handle_event(NoteEvent::NoteOff {
             timing: 0,
-            voice_id: None,
-            channel: 5,
-            note: 67,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(5),
+            key: Key::Number(67),
             velocity: 0.0,
         });
         assert_eq!(
@@ -873,9 +899,9 @@ mod tests {
 
         x.handle_event(NoteEvent::PolyPressure {
             timing: 0,
-            voice_id: None,
-            channel: 2,
-            note: 48,
+            voice_id: VoiceID::Wildcard,
+            channel: Channel::Number(2),
+            key: Key::Number(48),
             pressure: 0.4,
         });
         x.handle_event(NoteEvent::MidiChannelPressure {
@@ -1336,9 +1362,9 @@ mod tests {
             [
                 NoteEvent::NoteOn {
                     timing: 0,
-                    voice_id: None,
-                    channel: 0,
-                    note: 64,
+                    voice_id: VoiceID::Wildcard,
+                    channel: Channel::Number(0),
+                    key: Key::Number(64),
                     velocity: 0.8,
                 },
                 end_panic,
@@ -1409,17 +1435,17 @@ mod baseline {
         plugin.handle_event(if on {
             NoteEvent::NoteOn {
                 timing: 0,
-                voice_id: None,
-                channel: 0,
-                note,
+                voice_id: VoiceID::Wildcard,
+                channel: Channel::Number(0),
+                key: Key::Number(note),
                 velocity: 0.8,
             }
         } else {
             NoteEvent::NoteOff {
                 timing: 0,
-                voice_id: None,
-                channel: 0,
-                note,
+                voice_id: VoiceID::Wildcard,
+                channel: Channel::Number(0),
+                key: Key::Number(note),
                 velocity: 0.0,
             }
         });
@@ -2222,9 +2248,9 @@ mod sample_rate_floor {
             assert_eq!(plugin.sample_rate, MIN_SAMPLE_RATE);
             plugin.handle_event(NoteEvent::NoteOn {
                 timing: 0,
-                voice_id: None,
-                channel: 0,
-                note: 48,
+                voice_id: VoiceID::Wildcard,
+                channel: Channel::Number(0),
+                key: Key::Number(48),
                 velocity: 0.8,
             });
             let out = render(&mut plugin, 4_000);
