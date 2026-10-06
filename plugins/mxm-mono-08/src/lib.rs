@@ -1836,11 +1836,15 @@ mod baseline {
             inverter_reference_patch(&p);
             inverter_setting(&p, amount_id);
             settle(&p);
-            assert_eq!(
-                digest(&render_inverter_score(&mut p)),
-                expected,
-                "the {name} setting no longer renders what the selector rendered"
-            );
+            let actual = digest(&render_inverter_score(&mut p));
+            // The pinned digests are Windows': each platform's maths library rounds in its own way,
+            // so Linux and macOS render other bits (the owner, 2026-10-06: pin on Windows only).
+            if cfg!(target_os = "windows") {
+                assert_eq!(
+                    actual, expected,
+                    "the {name} setting no longer renders what the selector rendered"
+                );
+            }
         }
     }
 

@@ -10,6 +10,12 @@ use std::path::PathBuf;
 const PLUGIN: &str = "dk.mxm.mxm-mono-08";
 /// First pinned with the non-editor shell. Measured by `behaviour`; not yet listened to.
 const GOLDEN_DIGEST: &str = "19a90ffe21920f05";
+
+/// Whether this platform's render can match the pinned digests. They are Windows': each platform's
+/// maths library rounds in its own way, so the same score renders different bits on Linux and macOS.
+/// The owner pinned them on Windows only, where the sound was recorded and approved (2026-10-06);
+/// elsewhere every other check in these tests still runs.
+const DIGESTS_PINNED_HERE: bool = cfg!(target_os = "windows");
 const GOLDEN_SAMPLES: usize = 86 * FRAMES_PER_BLOCK * 2;
 fn bundle() -> Option<(PathBuf, PathBuf)> {
     let dir = app_harness::any_bundled_dir()?;
@@ -65,12 +71,14 @@ fn the_fixed_real_host_score_has_not_moved() {
     assert_eq!(samples.len(), GOLDEN_SAMPLES);
     assert!(samples.iter().any(|x| x.abs() > 1e-4));
     let actual = digest(&samples);
-    assert_eq!(
-        actual,
-        GOLDEN_DIGEST,
-        "render moved; listen to {} and, if intended, pin {actual}",
-        wav.display()
-    );
+    if DIGESTS_PINNED_HERE {
+        assert_eq!(
+            actual,
+            GOLDEN_DIGEST,
+            "render moved; listen to {} and, if intended, pin {actual}",
+            wav.display()
+        );
+    }
 }
 #[test]
 fn the_reference_is_sensitive_to_the_complex_oscillator() {
@@ -82,7 +90,9 @@ fn the_reference_is_sensitive_to_the_complex_oscillator() {
     s.load(&file, PLUGIN);
     set(&mut s, "Complex timbre", 0.98);
     score(&mut s).unwrap();
-    assert_ne!(digest(&s.captured()), GOLDEN_DIGEST);
+    if DIGESTS_PINNED_HERE {
+        assert_ne!(digest(&s.captured()), GOLDEN_DIGEST);
+    }
 }
 fn digest(samples: &[f32]) -> String {
     let mut h: u64 = 0xcbf2_9ce4_8422_2325;
