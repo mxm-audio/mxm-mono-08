@@ -19,8 +19,9 @@ is ready to gate editor work; its recognisability trial and §15 QA still remain
 
 **Names (the owner, 2026-09-23).** The panel speaks east-coast: the pulser is the **Clock**, a stage
 is a **Step**, a pulse is a **Trigger**, and each module's name prefixes its controls — *Complex
-timbre*, *Mod depth*, *LPG 1 mix*. `plugins/mxm-mono-08/AGENTS.md` *Names* holds the rules and the
-table from the code's words to the panel's. Where this brief describes the original hardware, it
+timbre*, *Mod depth*, *LPG 1 mix*. `plugins/mxm-mono-08/AGENTS.md` *Names* holds the rules, and
+`plugins/mxm-mono-08/NOTES.md` *Names* the rulings and the table from the code's words to the
+panel's. Where this brief describes the original hardware, it
 keeps the hardware's words.
 
 ## Product boundary before the ten questions
