@@ -1,0 +1,1530 @@
+{
+  "schema_version": 1,
+  "plugin": "dk.mxm.mxm-mono-08",
+  "name": "Sparse steps",
+  "category": "sequence",
+  "_comment": "`v` is the value and is authoritative. `text` is this plugin's own formatting of it, kept so the file can be read, and is never loaded.",
+  "params": {
+    "attack": {
+      "v": 0.05,
+      "text": "2 ms"
+    },
+    "bendrange": {
+      "v": 0.083333336,
+      "text": "2 st"
+    },
+    "complexendpoint": {
+      "v": 1.0,
+      "text": "Triangle"
+    },
+    "complexfreq": {
+      "v": 0.46,
+      "text": "105.1 Hz"
+    },
+    "complexkeyboard": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "cv_amplitude_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_envelope": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_inverter": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_amplitude_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_random1": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_velocity": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_amplitude_wheel": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_amplitude_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_bend": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_complexosc": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_envelope": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_inverter": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_key": {
+      "v": 0.5,
+      "text": "+0.00 st/oct"
+    },
+    "cv_complexpitch_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_modosc": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_pressure": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_pulser": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_random1": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_random2": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_random3": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_random4": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_sequencer": {
+      "v": 0.74,
+      "text": "+13.82 st"
+    },
+    "cv_complexpitch_sequenceron": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "cv_complexpitch_velocity": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_complexpitch_wheel": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_complexpitch_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_envelope": {
+      "v": 0.81999993,
+      "text": "+64 %"
+    },
+    "cv_gate1_envelopeon": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "cv_gate1_inverter": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_gate1_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_random1": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_velocity": {
+      "v": 0.0,
+      "text": "+0 %"
+    },
+    "cv_gate1_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate1_wheel": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate1_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_envelope": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_inverter": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_gate2_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_random1": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_velocity": {
+      "v": 0.0,
+      "text": "+0 %"
+    },
+    "cv_gate2_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_gate2_wheel": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_gate2_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_envelope": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_inverter_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_random1": {
+      "v": 1.0,
+      "text": "+100 %"
+    },
+    "cv_inverter_random1on": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "cv_inverter_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_inverter_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_velocity": {
+      "v": 1.0,
+      "text": "+0 %"
+    },
+    "cv_inverter_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_inverter_wheel": {
+      "v": 0.0,
+      "text": "+0 %"
+    },
+    "cv_inverter_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_envelope": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_inverter": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_modindex_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_random1": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_velocity": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modindex_wheel": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_modindex_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_bend": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_complexosc": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_envelope": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_inverter": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_key": {
+      "v": 0.5,
+      "text": "+0.00 st/oct"
+    },
+    "cv_modpitch_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_modosc": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_pressure": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_pulser": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_random1": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_random2": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_random3": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_random4": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_sequencer": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_velocity": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_modpitch_wheel": {
+      "v": 0.5,
+      "text": "+0.00 st"
+    },
+    "cv_modpitch_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_bend": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_complexosc": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_envelope": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_inverter": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_key": {
+      "v": 0.5,
+      "text": "+0.00 x speed/oct"
+    },
+    "cv_portamentospeed_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_modosc": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_pressure": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_pulser": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_random1": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_random2": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_random3": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_random4": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_sequencer": {
+      "v": 0.5,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_velocity": {
+      "v": 1.0,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_portamentospeed_wheel": {
+      "v": 0.0,
+      "text": "+0.00 x speed"
+    },
+    "cv_portamentospeed_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_bend": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_complexosc": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_envelope": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_inverter": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_key": {
+      "v": 0.5,
+      "text": "+0 % period/oct"
+    },
+    "cv_pulserperiod_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_modosc": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_pressure": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_pulser": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_random1": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_random2": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_random3": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_random4": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_sequencer": {
+      "v": 0.5,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_velocity": {
+      "v": 1.0,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_pulserperiod_wheel": {
+      "v": 0.0,
+      "text": "+0 % period"
+    },
+    "cv_pulserperiod_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_bend": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_complexosc": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_envelope": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_inverter": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_key": {
+      "v": 0.5,
+      "text": "+0.00 steps/oct"
+    },
+    "cv_sequencelength_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_modosc": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_pressure": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_pulser": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_random1": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_random2": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_random3": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_random4": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_sequencer": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_velocity": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_sequencelength_wheel": {
+      "v": 0.5,
+      "text": "+0.00 steps"
+    },
+    "cv_sequencelength_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_bend": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_bendon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_complexosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_complexoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_envelope": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_envelopeon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_inverter": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_inverteron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_key": {
+      "v": 0.5,
+      "text": "+0 %/oct"
+    },
+    "cv_timbre_keyon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_modosc": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_modoscon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_pressure": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_pressureon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_pulser": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_pulseron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_random1": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_random1on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_random2": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_random2on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_random3": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_random3on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_random4": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_random4on": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_sequencer": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_sequenceron": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_velocity": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_velocityon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "cv_timbre_wheel": {
+      "v": 0.5,
+      "text": "+0 %"
+    },
+    "cv_timbre_wheelon": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "decay": {
+      "v": 0.36,
+      "text": "170 ms"
+    },
+    "duration": {
+      "v": 0.09,
+      "text": "3 ms"
+    },
+    "envmode": {
+      "v": 0.0,
+      "text": "One-shot"
+    },
+    "gate1level": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "gate1mode": {
+      "v": 1.0,
+      "text": "VCA + VCF"
+    },
+    "gate2input": {
+      "v": 1.0,
+      "text": "LPG 1"
+    },
+    "gate2level": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "gate2mode": {
+      "v": 1.0,
+      "text": "VCA + VCF"
+    },
+    "master": {
+      "v": 0.8,
+      "text": "80 %"
+    },
+    "mix1": {
+      "v": 0.8,
+      "text": "80 %"
+    },
+    "mix2": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "modfreq": {
+      "v": 0.6621745,
+      "text": "5.00 Hz"
+    },
+    "modhigh": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "modindex": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "modkeyboard": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "modtype": {
+      "v": 0.0,
+      "text": "AM"
+    },
+    "modwave": {
+      "v": 0.0,
+      "text": "Triangle"
+    },
+    "portamento": {
+      "v": 0.0,
+      "text": "0 ms"
+    },
+    "pulse_envelope_keyboard": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_envelope_pulserend": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_envelope_stage": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "pulse_pulser_keyboard": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "pulse_pulser_pulserend": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_pulser_stage": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_random_keyboard": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_random_pulserend": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_random_stage": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_sequencer_keyboard": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulse_sequencer_pulserend": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "pulse_sequencer_stage": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "pulserperiod": {
+      "v": 0.34,
+      "text": "136 ms"
+    },
+    "pulserself": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "pulsersync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "reverb": {
+      "v": 0.58,
+      "text": "58 %"
+    },
+    "seq1level": {
+      "v": 0.2,
+      "text": "20 %"
+    },
+    "seq1pulse": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "seq2level": {
+      "v": 0.55,
+      "text": "55 %"
+    },
+    "seq2pulse": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "seq3level": {
+      "v": 0.35,
+      "text": "35 %"
+    },
+    "seq3pulse": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "seq4level": {
+      "v": 0.85,
+      "text": "85 %"
+    },
+    "seq4pulse": {
+      "v": 1.0,
+      "text": "On"
+    },
+    "seq5level": {
+      "v": 0.45,
+      "text": "45 %"
+    },
+    "seq5pulse": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "seqlength": {
+      "v": 1.0,
+      "text": "5 steps"
+    },
+    "timbre": {
+      "v": 0.35,
+      "text": "35 %"
+    },
+    "wavemix": {
+      "v": 0.45,
+      "text": "45 %"
+    }
+  },
+  "state": null
+}

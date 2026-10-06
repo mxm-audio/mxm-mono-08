@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "_comment": [
+    "The conservative collection-role map for mxm-mono-08.",
+    "Only existing roles with the same meaning are claimed. Timbre is not pulse width, a",
+    "low-pass gate is not a resonant filter, and the five-stage CV/pulse network has no roles",
+    "in the current standard; all remain available through host automation and the plugin UI.",
+    "The built-in mono spring is part of this voice and therefore fills the existing reverb role.",
+    "lfo1.rate stays on the modulation frequency in both ranges; its high range reaches audio rates."
+  ],
+  "instruments": [
+    {
+      "clap_id": "dk.mxm.mxm-mono-08",
+      "name": "mxm-mono-08",
+      "params": {
+        "osc1.wave": "complexendpoint",
+        "osc2.wave": "modwave",
+        "mixer.src1": "mix1",
+        "mixer.src2": "mix2",
+        "amp_env.attack": "attack",
+        "amp_env.release": "decay",
+        "lfo1.rate": "modfreq",
+        "lfo1.shape": "modwave",
+        "voice.glide": "portamento",
+        "voice.bend_range": "bendrange",
+        "voice.output": "master",
+        "fx.reverb": "reverb"
+      }
+    }
+  ]
+}
