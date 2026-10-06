@@ -1,9 +1,10 @@
 //! Framework-free DSP for mxm-mono-08's 1973-card-set patchable mono voice.
 //!
-//! The implementation is original MIT-licensed code informed by the facts in
+//! The implementation is original code — MIT-licensed until the split of 2026-10-06, and
+//! GPL-3.0-or-later with the rest of this repository since — informed by the facts in
 //! `research:instruments/buchla-music-easel.md` and its specialist pages. No third-party
 //! implementation is copied. Fidelity is unverified: constants not established by those sources
-//! are explicitly labelled chosen in this crate's `AGENTS.md` and beside their definitions.
+//! are explicitly labelled chosen in this crate's `NOTES.md` and beside their definitions.
 
 #[cfg(any(test, feature = "conformance"))]
 pub mod conformance;

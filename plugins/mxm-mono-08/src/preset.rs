@@ -1527,10 +1527,10 @@ mod tests {
         preset
     }
 
-    /// **What a normalised value means, printed.** `docs/adding-an-instrument.md` says every
-    /// instrument has this and mono-08 did not, which is most of why `FACTORY_DESIGN` reads like
-    /// fifty guesses: a design names `("modfreq", 0.42)` and nothing anywhere says that is 12 Hz
-    /// until the file has been generated and its `text` field read back.
+    /// **What a normalised value means, printed.** mxm-kit's `docs/adding-an-instrument.md` says
+    /// every instrument has this and mono-08 did not, which is most of why `FACTORY_DESIGN` reads
+    /// like fifty guesses: a design names `("modfreq", 0.42)` and nothing anywhere says that is 12
+    /// Hz until the file has been generated and its `text` field read back.
     ///
     /// It uses `ErasedParam::format`, the same call the generator writes into `text`, so the table
     /// and the shipped files cannot disagree.

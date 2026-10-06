@@ -3,6 +3,9 @@
 The detail behind this folder's AGENTS.md: history, measurements, rationale and worked examples.
 AGENTS.md is the contract; this file is the reference it links to.
 
+*Since the split (2026-10-06):* the `plans/` cited below are the design history, in the private
+archive.
+
 ## The voice, its source and its one deviation
 
 The original 1973-card-set Model 208/218 voice as framework-free Rust: the separate-core complex
@@ -224,3 +227,6 @@ all LPG modes, spring arrival/tail, pressure and tuning ownership,
 memoised-coefficient transparency against an unmemoised reference, and
 deterministic whole-voice renders. Linux and macOS remain
 unverified because there is no CI; development verification is Windows.
+*Since the split (2026-10-06):* CI runs the tests on Windows, macOS and Linux on a `v*` release tag
+or when started by hand, and Linux is checked in WSL before every push (root *Windows, Linux and
+macOS*).

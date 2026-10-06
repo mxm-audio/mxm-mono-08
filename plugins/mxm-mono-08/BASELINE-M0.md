@@ -1,6 +1,6 @@
 # mxm-mono-08 — pre-conversion reference, captured at M0
 
-`plans/plan-mxm-mono-08-modulation.md` M0. **These figures stop existing once the routing conversion
+`plans/plan-mxm-mono-08-modulation.md` (in the private archive) M0. **These figures stop existing once the routing conversion
 starts**, which is why they are captured first and committed rather than re-derived.
 
 Produced by `plugins/mxm-mono-08/src/lib.rs`'s `baseline` module, on the tree at `72021b3` with only
@@ -33,7 +33,7 @@ unchanged.
 
 ## Throughput
 
-Taken with nothing else building — `docs/code-review-notes.md` §3 is plain that a timing taken
+Taken with nothing else building — mxm-kit's `docs/code-review-notes.md` §3 is plain that a timing taken
 during a build is not a measurement — at 48 000 Hz in 64-sample blocks, one held note, three passes
 each:
 
@@ -166,7 +166,9 @@ differs from Init's, and what accounts for that difference is not established he
 ## The player golden
 
 `apps/mxm-player/tests/t4_golden_audio_mono_08.rs`, **pinned at `19a90ffe21920f05`** — a pin that
-predates this plan, taken with the non-editor shell. At M0 it **holds with the seam in place**,
+predates this plan, taken with the non-editor shell. *Since the split (2026-10-06):* that test is
+this repository's `plugins/mxm-mono-08/host-tests/tests/golden_audio.rs`, same pin, compared on
+Windows only. At M0 it **holds with the seam in place**,
 against a release bundle built from this tree: `the_fixed_real_host_score_has_not_moved` and
 `the_reference_is_sensitive_to_the_complex_oscillator` both pass, and the debug bundle's behaviour
 suite passes beside them. The bundles were confirmed present, because that test returns early — and

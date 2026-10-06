@@ -610,7 +610,7 @@ impl CvRoutes {
     /// pair was absent nothing called `next()`, but the parameter stayed editable: a host
     /// automating it, or a preset load, moves the target and leaves the smoother wherever the last
     /// live sample left it, so resuming from there ramps the route in from a stale number over a
-    /// span the host's buffers decide (`docs/code-review-notes.md` §7).
+    /// span the host's buffers decide (mxm-kit's `docs/code-review-notes.md` §7).
     pub fn arm(&self, newly_present: &[bool; CV_SOURCES]) {
         for (source, &now) in newly_present.iter().enumerate() {
             if now {

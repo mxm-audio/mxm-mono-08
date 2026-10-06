@@ -1221,9 +1221,9 @@ mod tests {
     }
     /// **A range edit under a held bend ramps the pitch; it never steps it.** The channel keeps the
     /// bender's position and the range scales it per sample, so the range is a signal
-    /// (`docs/code-review-notes.md` §2). Verified against the defect: with `bend_range.value()` in
-    /// `next_patch`, the first sample after the edit is already the whole new range and the largest
-    /// per-sample move is ten semitones.
+    /// (mxm-kit's `docs/code-review-notes.md` §2). Verified against the defect: with
+    /// `bend_range.value()` in `next_patch`, the first sample after the edit is already the whole
+    /// new range and the largest per-sample move is ten semitones.
     #[test]
     fn a_range_edit_under_a_held_bend_ramps_rather_than_steps() {
         let mut x = MxmMono08::default();
@@ -1376,9 +1376,9 @@ mod tests {
 /// ```
 ///
 /// Release only, and only from a quiet machine — a timing taken while something builds is not a
-/// measurement (`docs/code-review-notes.md` §3). With `MXM_M0_DUMP=<dir>` the bank's renders are
-/// also written there as raw little-endian `f32`, and `the_bank_against_the_m0_dump` compares a
-/// later build against them sample by sample.
+/// measurement (mxm-kit's `docs/code-review-notes.md` §3). With `MXM_M0_DUMP=<dir>` the bank's
+/// renders are also written there as raw little-endian `f32`, and `the_bank_against_the_m0_dump`
+/// compares a later build against them sample by sample.
 ///
 /// **The module uses only what both revisions have** — the seam, the permanent ids of the factory
 /// files and the note events — so this same file runs before the conversion and after it. It reads
@@ -1392,8 +1392,8 @@ mod baseline {
     const FS: f32 = 48_000.0;
     const BLOCK: usize = 64;
 
-    /// A plugin with every smoother activated (`docs/adding-an-instrument.md` gotcha 13), at the
-    /// rate `activate` would give it.
+    /// A plugin with every smoother activated (mxm-kit's `docs/adding-an-instrument.md` gotcha 13),
+    /// at the rate `activate` would give it.
     pub(super) fn plugin() -> MxmMono08 {
         let mut plugin = MxmMono08::default();
         for (_, ptr, _) in plugin.params.param_map() {

@@ -465,7 +465,7 @@ pub fn complement(x: f32) -> f32 {
 ///
 /// **It travels beside the patch, never inside it.** `voice::Params` is rebuilt every sample, and a
 /// 165-float grid carried there is a memcpy per sample for values that change only on a parameter
-/// event (`docs/code-review-notes.md` §7).
+/// event (mxm-kit's `docs/code-review-notes.md` §7).
 #[derive(Debug, Clone, Copy)]
 pub struct Routing {
     /// Per destination, per source: whether that route exists.

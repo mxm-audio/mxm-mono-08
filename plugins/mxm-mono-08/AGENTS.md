@@ -11,8 +11,8 @@ and rulings behind each rule below are in [NOTES.md](NOTES.md).
 
 # Ownership
 
-Owns `BASELINE-M0.md`, `Cargo.toml`, `LICENSE`, `README.md`, `control-map.json`, `presets/` and
-`src/`. The DSP crate owns synthesis and the hardware-function evidence. `mxm-preset` owns preset
+Owns `BASELINE-M0.md`, `Cargo.toml`, `README.md`, `control-map.json`, `presets/` and `src/` (its
+licence is the repository's root `LICENSE`). The DSP crate owns synthesis and the hardware-function evidence. `mxm-preset` owns preset
 format/library/UI. MXM Player stays generic: its tests may name this product, its production code
 may not special-case it.
 
@@ -153,7 +153,7 @@ step faders ten cents and 0.1 %** (the owner's `Alt` layer, 2026-09-24; `mxm_pre
   low-pass gate is not called a resonant filter; Complex timbre is not called pulse width; the routing
   and the sequencer remain accessible by parameters until the collection standard has honest roles.
 - Product-facing labels, descriptions and preset names use no maker/model names. Internal evidence
-  and fidelity decisions remain in the DSP and plan documents.
+  and fidelity decisions remain in the DSP and plan documents (the plans in the private archive).
 
 # Work Guidance
 
@@ -178,8 +178,8 @@ cargo test -p mxm-mono-08-host-tests      # behaviour, robustness and golden_aud
 # Debug bundle; real CLAP host, explicitly armed editor-side Once producer:
 cargo test -p mxm-mono-08-host-tests --test behaviour editor_once_wakes_a_sleeping_real_host_and_produces_one_burst -- --ignored --nocapture
 cargo xtask bundle mxm-mono-08 --release
-cargo test -p mxm-player --test t7_editor mxm_mono_08_advertises_a_floating_editor -- --nocapture
-# Windows desktop; creates a native window twice:
+cargo test -p mxm-player --test t7_editor mxm_mono_08_advertises_a_floating_editor -- --nocapture   # in mxm-player
+# In the mxm-player repository, on a Windows desktop; creates a native window twice:
 cargo test -p mxm-player --test t7_editor mxm_mono_08s_editor_opens_and_reopens -- --ignored --nocapture
 clap-validator validate target/bundled/mxm-mono-08.clap
 cargo test -p mxm-mono-08-host-tests      # behaviour, robustness and golden_audio, through MXM Player

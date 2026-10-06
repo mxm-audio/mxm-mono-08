@@ -1,6 +1,6 @@
 # mxm-mono-08 — UI design brief
 
-Required by `MXM_DESIGN_SYSTEM.md` §14 and written before editor work. This brief targets the
+Required by mxm-kit's [`MXM_DESIGN_SYSTEM.md`](https://github.com/mxm-audio/mxm-kit/blob/main/docs/MXM_DESIGN_SYSTEM.md) §14 and written before editor work. This brief targets the
 original 1973–74 Model 208 sound source with the original Model 218 performance signals. The
 specific evidence set is the dated 1973 card set and the late-1973/early-1974 unit described in
 `research:instruments/buchla-music-easel.md`; later 208C/218e features are out.

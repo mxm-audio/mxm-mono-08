@@ -3,6 +3,9 @@
 The detail behind this folder's AGENTS.md: history, measurements, rationale and worked examples.
 AGENTS.md is the contract; this file is the reference it links to.
 
+*Since the split (2026-10-06):* the `plans/` cited below are the design history, in the private
+archive.
+
 ## BASELINE-M0.md
 
 **`BASELINE-M0.md` is the routing conversion's reference**: Init's and the fifty factory sounds'
@@ -176,7 +179,7 @@ identifier stayed, which is why the code still says `pulser`, `stage` and `pulse
   moves one mid-render.
 - **Bend range is one of the smoothed values.** The channel stores the bender's position and the
   range scales it into pitch every sample, so an unsmoothed range edit under a held bend is a pitch
-  step (`docs/code-review-notes.md` §2). `a_range_edit_under_a_held_bend_ramps_rather_than_steps`
+  step (mxm-kit's `docs/code-review-notes.md` §2). `a_range_edit_under_a_held_bend_ramps_rather_than_steps`
   holds the ramp.
 
 ## A route is a presence and an amount, and what that costs elsewhere
@@ -278,7 +281,7 @@ position is not offered, and a switch cannot grow one, so adding it would be a n
   counter path. Each accepted activation is consumed once at the next process/event boundary;
   requests do not coalesce, overflow increments the rejection count, and sequentially consistent
   counters give cancellation and concurrent submission one total order. Every accepted editor act
-  also schedules `EditorTask::WakeAudio`; the vendored CLAP wrapper turns that non-parameter task
+  also schedules `EditorTask::WakeAudio`; the vendored CLAP wrapper (the MXM nice-plug fork since the split) turns that non-parameter task
   into `host.request_process`, so an inert host resumes. No parameter ID, preset, CLAP state,
   control-map role or editor open/close can fire it. The real-host test starts a child process with
   an immutable `MXM_MONO_08_TEST_ONCE_DIR`; one debug instance atomically claims `ready`, then an
@@ -326,7 +329,8 @@ position is not offered, and a switch cannot grow one, so adding it would be a n
   CC 119 uses the parent's category addresses; Parameters is 127, separate and absent from tabs.
   `editing_cards_fit_the_quarter_4k_content_budget_at_one_times_scale` checks every derived page;
   native/DPI inspection is still open.
-- **Every card is a `mxm_ui::tree`** (`plans/plan-layout-tree.md`; `crates/ui/AGENTS.md`, *A
+- **Every card is a `mxm_ui::tree`** (`plans/plan-layout-tree.md`; mxm-kit's
+  [`crates/ui/AGENTS.md`](https://github.com/mxm-audio/mxm-kit/blob/main/crates/ui/AGENTS.md), *A
   card body as data*). `sections::card` describes a card's body once — knob columns, selectors,
   toggles, route stacks, the trigger groups, the displays — and that one description is measured
   for the card's floor and height and drawn leaf by leaf through the same bindings
@@ -479,7 +483,7 @@ the shipped panel.
 
 **Choose a design's numbers from `the_mapping_table`, not from a hunch.** It is `#[ignore]`d in
 `preset.rs` and prints what every normalised value means in Hz, ms and mode names.
-`docs/adding-an-instrument.md` has always said every instrument has this; mono-08 did not, and
+mxm-kit's `docs/adding-an-instrument.md` has always said every instrument has this; mono-08 did not, and
 fifty designs were written blind as a result.
 
 ## Verification: the fit check and the host suite
@@ -497,3 +501,6 @@ The host suite covers the real bundle, its 350-parameter surface, keyed sound, p
 five-stage sequencing, event-offset splitting, activity/tails, debug allocation assertions, hostile
 rates and legal callback sizes, and the pinned real-host render. Design-system §15 visual review,
 real-DAW parenting/resizing, Linux and macOS remain manual because this repository has no CI.
+*Since the split (2026-10-06):* CI runs the tests and the host suite on Windows, macOS and Linux on a
+`v*` release tag or when started by hand, Linux is checked in WSL before every push, and the pinned
+render's digest is compared on Windows only. Visual review and a real DAW stay manual.

@@ -19,4 +19,4 @@ it. It offers stereo and mono out, with no audio input.
 
 ## Licence
 
-MIT. See [LICENSE](LICENSE).
+GPL-3.0-or-later. See the repository's [`LICENSE`](../../LICENSE).

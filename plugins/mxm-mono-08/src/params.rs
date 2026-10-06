@@ -454,7 +454,7 @@ impl Default for MxmMono08Params {
                 },
             )
             // Smoothed because it scales a held bend into the pitch CV: a range edit under a held
-            // bend would otherwise be a pitch step (`docs/code-review-notes.md` §2).
+            // bend would otherwise be a pitch step (mxm-kit's `docs/code-review-notes.md` §2).
             .with_smoother(SmoothingStyle::Linear(20.0))
             .with_unit(" st")
             .with_value_to_string(formatters::v2s_f32_rounded(0)),
@@ -601,10 +601,10 @@ mod tests {
     /// reading that chooses its unit or its sign from the raw value can print one text, parse to the
     /// other side of its own switch and print another — which `clap-validator`'s
     /// `param-conversions` fails only when its values land in that sliver, so a clean run proves
-    /// nothing (`docs/code-review-notes.md` §6). This walks every parameter, with the unit on as the
-    /// host sees it, across clap-validator 0.4.1's own grid, the collection's `i / 19` grid, and
-    /// the normalised neighbours of every value in [`BOUNDARIES`] — once in each modulation range,
-    /// because the frequency reads in the one selected.
+    /// nothing (mxm-kit's `docs/code-review-notes.md` §6). This walks every parameter, with the unit
+    /// on as the host sees it, across clap-validator 0.4.1's own grid, the collection's `i / 19`
+    /// grid, and the normalised neighbours of every value in [`BOUNDARIES`] — once in each
+    /// modulation range, because the frequency reads in the one selected.
     #[test]
     fn every_parameter_text_is_idempotent_through_the_hosts_conversion() {
         let mut failures: Vec<String> = Vec::new();
