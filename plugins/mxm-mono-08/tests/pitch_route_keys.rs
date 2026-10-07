@@ -7,6 +7,10 @@
 //! followed the same day — *"so when this is set to 1 octave, there is a 1:1 on the pitches"* — and
 //! since the whole fader is one octave through a route reading `+12.00 st`, a stage steps to the
 //! next semitone (up/down) and by exactly 1 % (left/right).
+//!
+//! Under the keyboard language, which this editor pilots (`mxm_ui::pilot`), a value changes with
+//! VALUE + the arrows, COARSE for the bigger step, and OUT keeps it: W, S, the arrow and Tab in the
+//! default keymap. A bare arrow moves the cursor.
 
 use std::collections::HashMap;
 
@@ -134,7 +138,21 @@ impl Rig {
         assert_eq!(self.nav.parameter(), Some(id), "the click took the cursor");
     }
 
+    /// Steps the parameter under the cursor as these tests read the arrows: ← and → the fine step,
+    /// ↑ and ↓ the coarse one. VALUE, COARSE for ↑ and ↓, the arrow, then OUT to keep it.
     fn press(&mut self, params: &MxmMono08Params, setter: &ParamSetter<'_>, key: Key) {
+        let mut keys = vec![Key::W];
+        if matches!(key, Key::ArrowUp | Key::ArrowDown) {
+            keys.push(Key::S);
+        }
+        keys.extend([key, Key::Tab]);
+        for key in keys {
+            self.tap(params, setter, key);
+        }
+    }
+
+    /// One key down and up again.
+    fn tap(&mut self, params: &MxmMono08Params, setter: &ParamSetter<'_>, key: Key) {
         let event = |pressed| Event::Key {
             key,
             physical_key: None,
