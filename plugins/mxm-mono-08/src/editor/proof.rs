@@ -893,7 +893,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         assert_gesture(&host, "Mod key tracking");
         let knob = harness.get_by_label("Mod depth");
         knob.focus();
-        harness.key_press(egui::Key::ArrowUp);
+        value_up(&mut harness);
         harness.run_steps(2);
         assert_gesture(&host, "Mod depth");
 
@@ -912,7 +912,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         assert_gesture(&host, "Complex pitch from Pressure on");
         let route = harness.get_by_label("Complex pitch from Pressure");
         route.focus();
-        harness.key_press(egui::Key::ArrowUp);
+        value_up(&mut harness);
         harness.run_steps(2);
         assert_gesture(&host, "Complex pitch from Pressure");
 
@@ -922,7 +922,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         harness.run_steps(3);
         let inverter = harness.get_by_label("Inverter input from Random 1");
         inverter.focus();
-        harness.key_press(egui::Key::ArrowUp);
+        value_up(&mut harness);
         harness.run_steps(2);
         assert_gesture(&host, "Inverter input from Random 1");
 
@@ -936,7 +936,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         harness.run_steps(3);
         let step = harness.get_by_label("Step 2 level");
         step.focus();
-        harness.key_press(egui::Key::ArrowUp);
+        value_up(&mut harness);
         harness.run_steps(2);
         assert_gesture(&host, "Step 2 level");
         mxm_ui::paging::editor::request_card(&harness.ctx, mxm_ui::paging::Key(9));
@@ -948,7 +948,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         // Output is in the app bar, on every view, and an edit there is one gesture like any other.
         let output = harness.get_by_label("Output");
         output.focus();
-        harness.key_press(egui::Key::ArrowUp);
+        value_up(&mut harness);
         harness.run_steps(2);
         assert_gesture(&host, "Output");
 
@@ -1513,6 +1513,14 @@ fn drawn_ids(params: &MxmMono08Params) -> Vec<&'static str> {
         }
     }
     ids
+}
+
+/// VALUE + ↑, kept with OUT: the keyboard language's edit (W, ↑, Tab in the default keymap),
+/// which this editor pilots (`mxm_ui::pilot`).
+fn value_up<State>(harness: &mut egui_kittest::Harness<'_, State>) {
+    for key in [egui::Key::W, egui::Key::ArrowUp, egui::Key::Tab] {
+        harness.key_press(key);
+    }
 }
 
 /// The rollout's own failure mode: a control whose `navigation::at` scope was forgotten paints
