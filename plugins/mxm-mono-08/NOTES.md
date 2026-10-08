@@ -455,15 +455,15 @@ patch would reach one route of a hundred and sixty-four. The expected set is bui
 rather than from the declared surface — the panel's own ids, plus the amount and presence of each
 live pair — so `Exactly` stays strict in both frames instead of being loosened to accommodate the
 routes that are not there. `master` is one of the panel's own ids and registers from its bar card on
-every page; the app bar is drawn before the cards, so a cursor that has never landed starts on
-Output.
+every page; a cursor that has never landed starts on the page's first card, not on Output, though
+the app bar is drawn first (the owner, 2026-10-07).
 
 **The pitch routes step by semitones and octaves** (owner, 2026-09-23: *"A lot of the pitch
 sliders in the mono 08 does not jump octaves and semitones with the keys. Even though they use
 those as display values."*). Complex pitch and Mod pitch read in semitones, so `sections::routes`
 draws them through `mxm_modulation_params::ui::stack_with_law` with `StepLaw::Interval` at
 `routes::reach` — the reading's own reach, a network pair's or the standard's, Key's per octave: a
-press lands on the next whole semitone (left/right) or octave (up/down). The other destinations keep
+press lands on the next whole semitone (fine) or octave (coarse). The other destinations keep
 their own step, as does every other instrument's route. The bend reach is `Semitones`, Complex pitch
 `Hertz`, and the modulation frequency `Hertz` in its high range only, declared in `sections::bound`.
 
@@ -472,8 +472,8 @@ set to 1 octave, there is a 1:1 on the pitches"*, and then that an octave coarse
 meaningful when the whole range is one octave). A step's level is a voltage, not a pitch, and its
 reading stays a percentage; but a pitch route reading `+12.00 st` makes the whole fader one octave,
 because the sum scales linearly into octaves. So `StepLaw::Voltage { octaves_per_unit: 1.0, fine:
-0.01 }` takes a coarse press (up/down) to the next twelfth — twelve semitones span the fader — and a
-fine press (left/right) exactly 1 %. **Coarse always lands on a whole semitone**: 2 % up and then
+0.01 }` takes a coarse press to the next twelfth — twelve semitones span the fader — and a fine
+press exactly 1 %. **Coarse always lands on a whole semitone**: 2 % up and then
 coarse up is one semitone, not one and 2 %. Only a coarse press lands on the grid: the stored level
 stays continuous, and fine, a drag or a host reaches anything between, which is what keeps the
 sequencer a voltage source rather than a quantiser. `tests/pitch_route_keys.rs` drives both through

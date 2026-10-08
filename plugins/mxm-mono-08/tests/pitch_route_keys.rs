@@ -2,15 +2,14 @@
 //!
 //! The owner, 2026-09-23: *"A lot of the pitch sliders in the mono 08 does not jump octaves and
 //! semitones with the keys. Even though they use those as display values."* A route into Complex
-//! pitch reads in semitones (octaves until the modulation standard); the arrows land on the next
-//! semitone (left/right) and the next octave (up/down), through the shipped panel. The stage faders
+//! pitch reads in semitones (octaves until the modulation standard); a press lands on the next
+//! semitone (fine) and the next octave (coarse), through the shipped panel. The stage faders
 //! followed the same day — *"so when this is set to 1 octave, there is a 1:1 on the pitches"* — and
 //! since the whole fader is one octave through a route reading `+12.00 st`, a stage steps to the
-//! next semitone (up/down) and by exactly 1 % (left/right).
+//! next semitone (coarse) and by exactly 1 % (fine).
 //!
-//! Under the keyboard language, which this editor pilots (`mxm_ui::pilot`), a value changes with
-//! VALUE + the arrows, COARSE for the bigger step, and OUT keeps it: W, S, the arrow and Tab in the
-//! default keymap. A bare arrow moves the cursor.
+//! Under the keyboard language a value changes with VALUE + the arrows, COARSE for the bigger step,
+//! and OUT keeps it: W, S, the arrow and Tab in the default keymap. A bare arrow moves the cursor.
 
 use std::collections::HashMap;
 

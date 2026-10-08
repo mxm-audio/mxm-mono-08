@@ -142,8 +142,8 @@ The parent's *The keyboard cursor runs in every editor* owns the contract
 ([NOTES.md § The keyboard cursor](NOTES.md#the-keyboard-cursor)). Locally: `Coverage::Exactly` in two
 frames, Init and every route present (`the_keyboard_cursor_reaches_and_operates_every_route_revealed`).
 Pitch routes step by semitones and octaves; step faders a semitone coarse and 1 % fine
-(`tests/pitch_route_keys.rs`). **Under `Alt` the pitch routes step ten cents and a cent, and the
-step faders ten cents and 0.1 %** (the owner's `Alt` layer, 2026-09-24; `mxm_preset::StepLaw`).
+(`tests/pitch_route_keys.rs`). **MICRO steps the pitch routes a cent and the step faders 0.1 %**
+(`mxm_preset::StepLaw`).
 
 ## Content and scope
 

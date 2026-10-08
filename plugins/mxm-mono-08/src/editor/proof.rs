@@ -1515,8 +1515,7 @@ fn drawn_ids(params: &MxmMono08Params) -> Vec<&'static str> {
     ids
 }
 
-/// VALUE + ↑, kept with OUT: the keyboard language's edit (W, ↑, Tab in the default keymap),
-/// which this editor pilots (`mxm_ui::pilot`).
+/// VALUE + ↑, kept with OUT: the keyboard language's edit (W, ↑, Tab in the default keymap).
 fn value_up<State>(harness: &mut egui_kittest::Harness<'_, State>) {
     for key in [egui::Key::W, egui::Key::ArrowUp, egui::Key::Tab] {
         harness.key_press(key);
