@@ -9,7 +9,7 @@
 //! next semitone (coarse) and by exactly 1 % (fine).
 //!
 //! Under the keyboard language a value changes with VALUE + the arrows, COARSE for the bigger step,
-//! and OUT keeps it: W, S, the arrow and Tab in the default keymap. A bare arrow moves the cursor.
+//! and OUT keeps it. A bare arrow moves the cursor.
 
 use std::collections::HashMap;
 
@@ -18,6 +18,7 @@ use mxm_mono_08::actions::TransientActions;
 use mxm_mono_08::editor::{PresetUi, panel};
 use mxm_mono_08::params::MxmMono08Params;
 use mxm_mono_08::telemetry::Telemetry;
+use mxm_plugin_test::keyboard_checks::{COARSE, OUT, VALUE, key_of};
 use nice_plug::prelude::*;
 
 /// A host that applies what the editor asks for, as the real one does.
@@ -140,11 +141,11 @@ impl Rig {
     /// Steps the parameter under the cursor as these tests read the arrows: ← and → the fine step,
     /// ↑ and ↓ the coarse one. VALUE, COARSE for ↑ and ↓, the arrow, then OUT to keep it.
     fn press(&mut self, params: &MxmMono08Params, setter: &ParamSetter<'_>, key: Key) {
-        let mut keys = vec![Key::W];
+        let mut keys = vec![key_of(VALUE)];
         if matches!(key, Key::ArrowUp | Key::ArrowDown) {
-            keys.push(Key::S);
+            keys.push(key_of(COARSE));
         }
-        keys.extend([key, Key::Tab]);
+        keys.extend([key, key_of(OUT)]);
         for key in keys {
             self.tap(params, setter, key);
         }

@@ -1445,6 +1445,7 @@ fn private_state_starts_clean_and_developer_requests_change_only_editor_state() 
 }
 
 use mxm_plugin_test::keyboard_checks;
+use mxm_plugin_test::keyboard_checks::{OUT, VALUE, key_of};
 
 /// What this editor keeps behind a disclosure, opened so the reachability check sees it.
 /// Nothing here: this brief has no disclosure, which is why `panel` discards the gated request.
@@ -1515,9 +1516,9 @@ fn drawn_ids(params: &MxmMono08Params) -> Vec<&'static str> {
     ids
 }
 
-/// VALUE + ↑, kept with OUT: the keyboard language's edit (W, ↑, Tab in the default keymap).
+/// VALUE + ↑, kept with OUT: the keyboard language's edit.
 fn value_up<State>(harness: &mut egui_kittest::Harness<'_, State>) {
-    for key in [egui::Key::W, egui::Key::ArrowUp, egui::Key::Tab] {
+    for key in [key_of(VALUE), egui::Key::ArrowUp, key_of(OUT)] {
         harness.key_press(key);
     }
 }
