@@ -143,7 +143,8 @@ The parent's *The keyboard cursor runs in every editor* owns the contract
 frames, Init and every route present (`the_keyboard_cursor_reaches_and_operates_every_route_revealed`).
 Pitch routes step by semitones and octaves; step faders a semitone coarse and 1 % fine
 (`tests/pitch_route_keys.rs`). **MICRO steps the pitch routes a cent and the step faders 0.1 %**
-(`mxm_preset::StepLaw`).
+(`mxm_preset::StepLaw`). ← → snap to the next line of the size (2026-10-09): on a pitch route the
+same whole semitones and octaves, on a step fader whole semitones coarse and the 1 % and 0.1 % lines.
 
 ## Content and scope
 

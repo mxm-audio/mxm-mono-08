@@ -8,8 +8,9 @@
 //! since the whole fader is one octave through a route reading `+12.00 st`, a stage steps to the
 //! next semitone (coarse) and by exactly 1 % (fine).
 //!
-//! Under the keyboard language a value changes with VALUE + the arrows, COARSE for the bigger step,
-//! and OUT keeps it. A bare arrow moves the cursor.
+//! Under the keyboard language a value changes with VALUE (or a step key alone) + the arrows,
+//! COARSE for the bigger step, ↑ ↓ by it and ← → to the next line of it, and OUT keeps it. A bare
+//! arrow moves the cursor.
 
 use std::collections::HashMap;
 
@@ -218,8 +219,9 @@ fn a_pitch_route_steps_to_the_next_semitone_and_octave() {
 }
 
 /// A stage steps a semitone coarse — a twelfth of its range, through a one-octave pitch route —
-/// and exactly 1 % fine. A coarse press lands on the next whole semitone, so a fine detune does not
-/// ride along: 2 % and then a coarse press up is one semitone, not one and 2 %.
+/// and 1 % fine, ← → to the next 1 % line (2026-10-09). A coarse press lands on the next whole
+/// semitone, so a fine detune does not ride along: 2 % and then a coarse press up is one semitone,
+/// not one and 2 %.
 #[test]
 fn a_stage_steps_a_semitone_coarse_and_a_percent_fine() {
     const ID: &str = "seq1level";
@@ -242,13 +244,13 @@ fn a_stage_steps_a_semitone_coarse_and_a_percent_fine() {
     let mut percents = Vec::new();
     let mut expected = Vec::new();
     for (key, want) in [
-        (Key::ArrowRight, 1.0),                 // 1 %
-        (Key::ArrowRight, 2.0),                 // 2 %
-        (Key::ArrowUp, semitone),               // the next semitone, not one and 2 %
-        (Key::ArrowUp, 2.0 * semitone),         // one more
-        (Key::ArrowLeft, 2.0 * semitone - 1.0), // 1 % below it
-        (Key::ArrowDown, semitone),             // the semitone below that
-        (Key::ArrowDown, 0.0),                  // the bottom
+        (Key::ArrowRight, 1.0),         // 1 %
+        (Key::ArrowRight, 2.0),         // 2 %
+        (Key::ArrowUp, semitone),       // the next semitone, not one and 2 %
+        (Key::ArrowUp, 2.0 * semitone), // one more
+        (Key::ArrowLeft, 16.0),         // the 1 % line below it
+        (Key::ArrowDown, semitone),     // the semitone below that
+        (Key::ArrowDown, 0.0),          // the bottom
     ] {
         rig.press(&params, &setter, key);
         percents.push(stage.value() * 100.0);
