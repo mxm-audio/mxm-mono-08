@@ -387,13 +387,17 @@ impl MxmMono08 {
                 1 => self.wheel[channel as usize % NUM_CHANNELS] = value.clamp(0.0, 1.0),
                 DEV_VIEW_CC if self.dev_cc => self
                     .telemetry
+                    .dev
                     .request_view((value.clamp(0.0, 1.0) * 127.0).round() as u8),
-                DEV_DISCLOSURE_CC if self.dev_cc => self.telemetry.request_disclosure(value >= 0.5),
-                DEV_BROWSER_CC if self.dev_cc => self.telemetry.request_browser(value >= 0.5),
+                DEV_DISCLOSURE_CC if self.dev_cc => {
+                    self.telemetry.dev.request_disclosure(value >= 0.5)
+                }
+                DEV_BROWSER_CC if self.dev_cc => self.telemetry.dev.request_browser(value >= 0.5),
                 // A theme by index, 0 light / 1 dark / 2 system: applied to the editor and never
                 // saved, so a capture run cannot rewrite the choice made in the app bar.
                 DEV_THEME_CC if self.dev_cc => self
                     .telemetry
+                    .dev
                     .request_theme((value.clamp(0.0, 1.0) * 127.0).round() as u8),
                 control_change::ALL_SOUND_OFF => {
                     self.cancel_transient_actions();
@@ -586,7 +590,7 @@ impl Plugin for MxmMono08 {
                     channel[i] = sample;
                 }
             }
-            self.telemetry.publish_peak(peak);
+            self.telemetry.meter.publish(peak);
             self.publish_voice_telemetry();
             start = end;
         }
@@ -1026,20 +1030,20 @@ mod tests {
         x.handle_event(cc(DEV_DISCLOSURE_CC, 1.0));
         x.handle_event(cc(DEV_BROWSER_CC, 1.0));
         x.handle_event(cc(DEV_THEME_CC, 1.0 / 127.0));
-        assert_eq!(x.telemetry.take_view_request(), None);
-        assert_eq!(x.telemetry.take_disclosure_request(), None);
-        assert_eq!(x.telemetry.take_browser_request(), None);
-        assert_eq!(x.telemetry.take_theme_request(), None);
+        assert_eq!(x.telemetry.dev.take_view(), None);
+        assert_eq!(x.telemetry.dev.take_disclosure(), None);
+        assert_eq!(x.telemetry.dev.take_browser(), None);
+        assert_eq!(x.telemetry.dev.take_theme(), None);
         x.dev_cc = true;
         x.handle_event(cc(DEV_VIEW_CC, 1.0));
         x.handle_event(cc(DEV_DISCLOSURE_CC, 1.0));
         x.handle_event(cc(DEV_BROWSER_CC, 1.0));
         x.handle_event(cc(DEV_THEME_CC, 1.0 / 127.0));
-        assert_eq!(x.telemetry.take_view_request(), Some(127));
-        assert_eq!(x.telemetry.take_disclosure_request(), Some(true));
-        assert_eq!(x.telemetry.take_browser_request(), Some(true));
+        assert_eq!(x.telemetry.dev.take_view(), Some(127));
+        assert_eq!(x.telemetry.dev.take_disclosure(), Some(true));
+        assert_eq!(x.telemetry.dev.take_browser(), Some(true));
         assert_eq!(
-            x.telemetry.take_theme_request(),
+            x.telemetry.dev.take_theme(),
             Some(1),
             "1 is dark, as mxm_ui::theme::from_index reads it"
         );

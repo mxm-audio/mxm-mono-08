@@ -3,10 +3,9 @@
 use mxm_mono_08_dsp::routing::{CV_SOURCES, PULSE_SOURCES};
 use mxm_mono_08_dsp::voice::Activity;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicU8, AtomicU32, AtomicU64, AtomicUsize, Ordering};
 
 pub const WAVEFORM_LEN: usize = 2048;
-const NO_REQUEST: u8 = u8::MAX;
 const EDITOR_OPEN_BIT: u64 = 1;
 
 #[derive(Debug, Clone, Copy)]
@@ -25,8 +24,12 @@ pub struct VoiceSnapshot {
 
 #[derive(Debug)]
 pub struct Telemetry {
-    peak: AtomicU32,
-    clipped: AtomicBool,
+    /// The output level and its clip latch: the collection's one meter policy
+    /// (`mxm_telemetry::PeakMeter`).
+    pub meter: mxm_telemetry::PeakMeter,
+    /// The developer channel's requests of the editor, each taken once
+    /// (`mxm_telemetry::DevRequests`).
+    pub dev: mxm_telemetry::DevRequests,
     activity: AtomicU8,
     sample_rate: AtomicU32,
     complex: Box<[AtomicU32]>,
@@ -47,10 +50,6 @@ pub struct Telemetry {
     once_fired: AtomicU64,
     once_cancelled: AtomicU64,
     once_rejected: AtomicU64,
-    dev_view: AtomicU8,
-    dev_disclosure: AtomicU8,
-    dev_browser: AtomicU8,
-    dev_theme: AtomicU8,
     /// The host tempo in force, so a synced clock period reads its division.
     pub tempo: mxm_tempo::TempoCell,
 }
@@ -62,8 +61,8 @@ impl Default for Telemetry {
 impl Telemetry {
     pub fn new() -> Self {
         Self {
-            peak: AtomicU32::new(0),
-            clipped: AtomicBool::new(false),
+            meter: mxm_telemetry::PeakMeter::new(),
+            dev: mxm_telemetry::DevRequests::new(),
             activity: AtomicU8::new(0),
             sample_rate: AtomicU32::new(48_000f32.to_bits()),
             complex: (0..WAVEFORM_LEN).map(|_| AtomicU32::new(0)).collect(),
@@ -82,10 +81,6 @@ impl Telemetry {
             once_fired: AtomicU64::new(0),
             once_cancelled: AtomicU64::new(0),
             once_rejected: AtomicU64::new(0),
-            dev_view: AtomicU8::new(NO_REQUEST),
-            dev_disclosure: AtomicU8::new(NO_REQUEST),
-            dev_browser: AtomicU8::new(NO_REQUEST),
-            dev_theme: AtomicU8::new(NO_REQUEST),
             tempo: mxm_tempo::TempoCell::new(),
         }
     }
@@ -94,24 +89,6 @@ impl Telemetry {
     }
     pub fn publish_sample_rate(&self, value: f32) {
         self.sample_rate.store(value.to_bits(), Ordering::Relaxed);
-    }
-    pub fn publish_peak(&self, peak: f32) {
-        let mut current = self.peak.load(Ordering::Relaxed);
-        loop {
-            let combined = f32::from_bits(current).max(peak);
-            match self.peak.compare_exchange_weak(
-                current,
-                combined.to_bits(),
-                Ordering::Relaxed,
-                Ordering::Relaxed,
-            ) {
-                Ok(_) => break,
-                Err(seen) => current = seen,
-            }
-        }
-        if peak >= 1.0 {
-            self.clipped.store(true, Ordering::Relaxed);
-        }
     }
     pub fn publish_voice(&self, snapshot: VoiceSnapshot) {
         // Capture before the scalar stores deliberately: tests can hold this publication across an
@@ -192,31 +169,7 @@ impl Telemetry {
         self.once_cancelled.store(cancelled, Ordering::Relaxed);
         self.once_rejected.store(rejected, Ordering::Relaxed);
     }
-    pub fn request_view(&self, value: u8) {
-        self.dev_view
-            .store(value.min(NO_REQUEST - 1), Ordering::Relaxed);
-    }
-    pub fn request_disclosure(&self, open: bool) {
-        self.dev_disclosure.store(u8::from(open), Ordering::Relaxed);
-    }
-    pub fn request_browser(&self, open: bool) {
-        self.dev_browser.store(u8::from(open), Ordering::Relaxed);
-    }
-    /// A theme by index — 0 light, 1 dark, 2 system, as `mxm_ui::theme::from_index` reads it.
-    pub fn request_theme(&self, theme: u8) {
-        self.dev_theme
-            .store(theme.min(NO_REQUEST - 1), Ordering::Relaxed);
-    }
 
-    pub fn take_peak(&self) -> f32 {
-        f32::from_bits(self.peak.swap(0, Ordering::Relaxed))
-    }
-    pub fn clipped(&self) -> bool {
-        self.clipped.load(Ordering::Relaxed)
-    }
-    pub fn clear_clip(&self) {
-        self.clipped.store(false, Ordering::Relaxed);
-    }
     pub fn activity(&self) -> Activity {
         match self.activity.load(Ordering::Relaxed) {
             2 => Activity::Live,
@@ -274,30 +227,6 @@ impl Telemetry {
             self.once_rejected.load(Ordering::Relaxed),
         )
     }
-    pub fn take_view_request(&self) -> Option<usize> {
-        match self.dev_view.swap(NO_REQUEST, Ordering::Relaxed) {
-            NO_REQUEST => None,
-            x => Some(usize::from(x)),
-        }
-    }
-    pub fn take_disclosure_request(&self) -> Option<bool> {
-        match self.dev_disclosure.swap(NO_REQUEST, Ordering::Relaxed) {
-            NO_REQUEST => None,
-            x => Some(x != 0),
-        }
-    }
-    pub fn take_browser_request(&self) -> Option<bool> {
-        match self.dev_browser.swap(NO_REQUEST, Ordering::Relaxed) {
-            NO_REQUEST => None,
-            x => Some(x != 0),
-        }
-    }
-    pub fn take_theme_request(&self) -> Option<u8> {
-        match self.dev_theme.swap(NO_REQUEST, Ordering::Relaxed) {
-            NO_REQUEST => None,
-            theme => Some(theme),
-        }
-    }
     pub fn waveform_snapshot(&self, out: &mut Vec<f32>) {
         out.clear();
         let head = self.complex_head.load(Ordering::Relaxed);
@@ -312,33 +241,6 @@ impl Telemetry {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
-    fn peak_combines_resets_and_clip_latches() {
-        let t = Telemetry::new();
-        t.publish_peak(0.8);
-        t.publish_peak(0.2);
-        assert_eq!(t.take_peak(), 0.8);
-        assert_eq!(t.take_peak(), 0.0);
-        t.publish_peak(1.0);
-        t.publish_peak(0.0);
-        assert!(t.clipped());
-        t.clear_clip();
-        assert!(!t.clipped());
-    }
-    #[test]
-    fn requests_are_taken_once() {
-        let t = Telemetry::new();
-        t.request_view(2);
-        t.request_disclosure(true);
-        t.request_browser(false);
-        t.request_theme(2);
-        assert_eq!(t.take_view_request(), Some(2));
-        assert_eq!(t.take_disclosure_request(), Some(true));
-        assert_eq!(t.take_browser_request(), Some(false));
-        assert_eq!(t.take_theme_request(), Some(2));
-        assert_eq!(t.take_view_request(), None);
-        assert_eq!(t.take_theme_request(), None);
-    }
     #[test]
     fn audio_publications_cannot_erase_unseen_one_sample_pulses() {
         let t = Telemetry::new();

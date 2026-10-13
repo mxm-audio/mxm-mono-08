@@ -722,7 +722,7 @@ fn the_accessibility_tree_names_each_view_and_its_non_text_visuals() {
         on_card(&harness, card, label);
     }
 
-    telemetry.request_view(1);
+    telemetry.dev.request_view(1);
     harness.run_steps(3);
     for (card, label) in [
         // `Fire once` is the Clock's, not the Envelope's. It rode along on card 6 while the two
@@ -746,7 +746,7 @@ fn the_accessibility_tree_names_each_view_and_its_non_text_visuals() {
         on_card(&harness, card, label);
     }
 
-    telemetry.request_view(2);
+    telemetry.dev.request_view(2);
     harness.run_steps(3);
     for (card, label) in [
         // The steps' switches paint only `Trigger`, and their canonical name is what the
@@ -762,7 +762,7 @@ fn the_accessibility_tree_names_each_view_and_its_non_text_visuals() {
         harness.get_by_label(label);
     }
 
-    telemetry.request_view(mxm_ui::paging::PARAMETERS as u8);
+    telemetry.dev.request_view(mxm_ui::paging::PARAMETERS as u8);
     harness.run_steps(3);
     for (id, parameter) in params.all_parameters() {
         // The app bar draws Output on every view, this one included, so the complete list is its
@@ -926,7 +926,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         harness.run_steps(2);
         assert_gesture(&host, "Inverter input from Random 1");
 
-        telemetry.request_view(2);
+        telemetry.dev.request_view(2);
         harness.set_size(vec2(MINIMUM.0 as f32, 2600.0));
         harness.run_steps(3);
         harness.get_by_label("Sequence length: 3 steps").click();
@@ -952,7 +952,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
         harness.run_steps(2);
         assert_gesture(&host, "Output");
 
-        telemetry.request_view(mxm_ui::paging::PARAMETERS as u8);
+        telemetry.dev.request_view(mxm_ui::paging::PARAMETERS as u8);
         harness.run_steps(3);
         set_normalised(&params, "master", 0.35);
         harness.run_steps(2);
@@ -962,7 +962,7 @@ fn shipped_panel_semantics_cover_control_kinds_views_updates_resets_and_cancella
             "external update emitted a gesture"
         );
 
-        telemetry.request_view(3);
+        telemetry.dev.request_view(3);
         mxm_ui::paging::editor::request_card(&harness.ctx, mxm_ui::paging::Key(1));
         harness.run_steps(60);
         // FM, as the first click in this test left it: the second of `modtype`'s two options.

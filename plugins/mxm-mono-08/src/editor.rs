@@ -236,7 +236,7 @@ pub fn panel(
     // `inert` both ask whether another surface owns this frame's keyboard.
     let busy = presets.holds_the_keyboard() || text_entry.values().any(Option::is_some);
     mxm_ui::paging::editor::hold(ui.ctx(), busy);
-    mxm_ui::paging::editor::developer_request(ui.ctx(), view, telemetry.take_view_request());
+    mxm_ui::paging::editor::developer_request(ui.ctx(), view, telemetry.dev.take_view());
 
     // **The keyboard cursor moves before anything is drawn**, so a navigation arrow is consumed
     // here rather than also walking egui's own focus ring. It reads the registry and the exact
@@ -249,28 +249,29 @@ pub fn panel(
     } else {
         mxm_ui::navigation::paged_with_bar(ui.ctx(), nav, busy, &[MASTER_CARD]);
     }
-    if let Some(open) = telemetry.take_browser_request() {
+    if let Some(open) = telemetry.dev.take_browser() {
         presets.set_browser_open(open);
     }
     // Applied and never stored: a capture run must not rewrite the choice made in the control.
     if let Some(preference) = telemetry
-        .take_theme_request()
+        .dev
+        .take_theme()
         .and_then(mxm_ui::theme::from_index)
     {
         ui.ctx().set_theme(preference);
     }
-    let _ = telemetry.take_disclosure_request(); // This brief has no disclosure; consume the gated request.
+    let _ = telemetry.dev.take_disclosure(); // This brief has no disclosure; consume the gated request.
 
     let tokens = tokens_for(ui);
-    let peak = telemetry.take_peak();
-    let clipped = telemetry.clipped();
+    let peak = telemetry.meter.take();
+    let clipped = telemetry.meter.clipped();
     mxm_ui::AppBar::new(crate::NAME).show_with(
         ui,
         &tokens,
         |ui| mxm_preset::ui::preset_row(ui, &tokens, params, setter, presets),
         |ui| {
             if mxm_ui::shell::level_meter(ui, &tokens, peak, clipped) {
-                telemetry.clear_clip();
+                telemetry.meter.clear_clip();
             }
             // Design system §3.1 slot 6: the instrument's output level sits beside its meter, not
             // on a card.
@@ -642,7 +643,7 @@ mod tests {
                         mxm_ui::theme::apply(&ctx);
                         let params = MxmMono08Params::default();
                         let telemetry = Telemetry::default();
-                        telemetry.request_view(requested_view as u8);
+                        telemetry.dev.request_view(requested_view as u8);
                         let actions = TransientActions::default();
                         let setter = ParamSetter::new(&NoHost);
                         let mut view = requested_view;
