@@ -3,9 +3,8 @@
 //! A deliberate DSP or shell change should fail this test. Listen to the emitted WAV, establish
 //! that the move was intended, and update the digest in the same change; never update it silently.
 
-use mxm_player::events::input::Payload;
 use mxm_player::session::{FRAMES_PER_BLOCK, Session};
-use mxm_player_harness::app_harness;
+use mxm_player_harness::host_test::digest;
 use std::path::PathBuf;
 const PLUGIN: &str = "dk.mxm.mxm-mono-08";
 /// First pinned with the non-editor shell. Measured by `behaviour`; not yet listened to.
@@ -18,16 +17,10 @@ const GOLDEN_DIGEST: &str = "19a90ffe21920f05";
 const DIGESTS_PINNED_HERE: bool = cfg!(target_os = "windows");
 const GOLDEN_SAMPLES: usize = 86 * FRAMES_PER_BLOCK * 2;
 fn bundle() -> Option<(PathBuf, PathBuf)> {
-    let dir = app_harness::any_bundled_dir()?;
-    let file = dir.join("mxm-mono-08.clap");
-    file.exists().then_some((dir, file))
+    mxm_player_harness::host_test::plugin_bundle("mxm-mono-08")
 }
 fn set(s: &mut Session, name: &str, f: f64) {
-    let p = s.state().param(name).unwrap().clone();
-    s.app().engine_mut().push_gui_event(Payload::ParamValue {
-        param_id: p.id,
-        value: p.min + f * (p.max - p.min),
-    });
+    mxm_player_harness::host_test::push_fraction(s, name, f);
 }
 /// Fixed forever: one press, a lower press taking ownership, the first returning, sequence routing,
 /// both releases, and the built-in spring tail.
@@ -93,14 +86,4 @@ fn the_reference_is_sensitive_to_the_complex_oscillator() {
     if DIGESTS_PINNED_HERE {
         assert_ne!(digest(&s.captured()), GOLDEN_DIGEST);
     }
-}
-fn digest(samples: &[f32]) -> String {
-    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
-    for s in samples {
-        for b in s.to_bits().to_le_bytes() {
-            h ^= u64::from(b);
-            h = h.wrapping_mul(0x0000_0100_0000_01b3);
-        }
-    }
-    format!("{h:016x}")
 }

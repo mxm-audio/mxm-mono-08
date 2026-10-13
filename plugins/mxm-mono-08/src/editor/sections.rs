@@ -9,7 +9,7 @@ use std::collections::HashMap;
 
 use egui::Ui;
 use mxm_mono_08_dsp::routing::PULSE_SOURCES;
-use mxm_preset::ErasedParam;
+use mxm_params::ErasedParam;
 use mxm_ui::control::{Size, Wave};
 use mxm_ui::space::{MIN_TARGET, SPACE_2, SPACE_3};
 use mxm_ui::theme::Tokens;
@@ -164,19 +164,19 @@ pub fn bound<'a>(params: &'a MxmMono08Params, id: &'static str) -> Bound<'a> {
         // oscillator is a pitch only in its high range; in the low one it is a rate and keeps its
         // own step. The high range is a ratio of the stored value, so a semitone of it is one here.
         law: match id {
-            "bendrange" => mxm_preset::StepLaw::Semitones,
-            "complexfreq" => mxm_preset::StepLaw::Hertz,
-            "modfreq" if params.mod_high.value() => mxm_preset::StepLaw::Hertz,
+            "bendrange" => mxm_params::StepLaw::Semitones,
+            "complexfreq" => mxm_params::StepLaw::Hertz,
+            "modfreq" if params.mod_high.value() => mxm_params::StepLaw::Hertz,
             // A stage's level is a voltage, not a pitch, but through a pitch route reading
             // `+1.00 oct` the whole fader is one octave — so a twelfth of it is a semitone. Coarse
             // goes to the next semitone and fine moves 1 %, the owner's ruling of 2026-09-23: an
             // octave step had only the two ends to land on. Only coarse lands on the grid; the
             // stored level stays continuous, and a drag or a host still reaches anything between.
-            id if STAGE_LEVEL_IDS.contains(&id) => mxm_preset::StepLaw::Voltage {
+            id if STAGE_LEVEL_IDS.contains(&id) => mxm_params::StepLaw::Voltage {
                 octaves_per_unit: 1.0,
                 fine: 0.01,
             },
-            _ => mxm_preset::StepLaw::Own,
+            _ => mxm_params::StepLaw::Own,
         },
     }
 }
@@ -391,15 +391,15 @@ fn route_stack(
 /// pitch read in semitones, and the reach is the very number the reading multiplies by
 /// (`routes::reach`) — a network pair's five or eight octaves, a performance pair's twelve
 /// semitones, Key's per octave — so a semitone on the keyboard is a semitone on the reading.
-fn pitch_law(destination: usize, route: &mxm_modulation_params::Route<'_>) -> mxm_preset::StepLaw {
+fn pitch_law(destination: usize, route: &mxm_modulation_params::Route<'_>) -> mxm_params::StepLaw {
     use mxm_mono_08_dsp::routing::{SOURCE_NAMES, network_octaves};
     if network_octaves(destination).is_none() {
-        return mxm_preset::StepLaw::Own;
+        return mxm_params::StepLaw::Own;
     }
     let Some(source) = SOURCE_NAMES.iter().position(|name| *name == route.source) else {
-        return mxm_preset::StepLaw::Own;
+        return mxm_params::StepLaw::Own;
     };
-    mxm_preset::StepLaw::Interval {
+    mxm_params::StepLaw::Interval {
         octaves_per_unit: f64::from(crate::routes::reach(destination, source).full / 12.0),
     }
 }

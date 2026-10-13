@@ -8,6 +8,8 @@ use mxm_mono_08_dsp::control::EnvelopeMode;
 use mxm_mono_08_dsp::lpg::GateMode;
 use mxm_mono_08_dsp::oscillator::{ComplexEndpoint, ModWave};
 use mxm_mono_08_dsp::voice::{Gate2Source, MOD_HIGH_RATIO, ModulationMode};
+use mxm_params::text;
+use mxm_params::text::{StringToValue, ValueToString};
 use nice_plug::prelude::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, RwLock};
@@ -164,60 +166,11 @@ impl SequenceLengthKind {
     }
 }
 
-type ValueToString = Arc<dyn Fn(f32) -> String + Send + Sync>;
-type StringToValue = Arc<dyn Fn(&str) -> Option<f32> + Send + Sync>;
-/// A whole percentage — **never a negative zero**. A bipolar amount just below zero prints `-0`,
-/// which parses to zero and prints `0`, so the text would change through the host's conversion.
-fn percent_to_string() -> ValueToString {
-    Arc::new(|v| {
-        let percent = format!("{:.0}", v * 100.0);
-        match percent.as_str() {
-            "-0" => String::from("0 %"),
-            _ => format!("{percent} %"),
-        }
-    })
-}
-fn percent_from_string() -> StringToValue {
-    Arc::new(|s| {
-        s.trim()
-            .trim_end_matches('%')
-            .trim()
-            .parse::<f32>()
-            .ok()
-            .map(|v| v / 100.0)
-    })
-}
-/// Whole milliseconds below a second, hundredths of a second from it — **the unit chosen from the
-/// rounded milliseconds, not the raw value.** Chosen from the raw value, 0.9996 s printed `1000 ms`,
-/// which parses to one second and prints `1.00 s`.
-fn time_to_string() -> ValueToString {
-    Arc::new(|v| {
-        let ms = v * 1000.0;
-        if ms.round() >= 1000.0 {
-            format!("{v:.2} s")
-        } else {
-            format!("{ms:.0} ms")
-        }
-    })
-}
-fn time_from_string() -> StringToValue {
-    Arc::new(|s| {
-        let s = s.trim().to_lowercase();
-        let (n, scale) = if let Some(v) = s.strip_suffix("ms") {
-            (v, 0.001)
-        } else if let Some(v) = s.strip_suffix('s') {
-            (v, 1.0)
-        } else {
-            (s.as_str(), 0.001)
-        };
-        n.trim().parse::<f32>().ok().map(|v| v * scale)
-    })
-}
 fn amount(name: impl Into<String>, default: f32) -> FloatParam {
     FloatParam::new(name, default, FloatRange::Linear { min: 0.0, max: 1.0 })
         .with_smoother(SmoothingStyle::Linear(10.0))
-        .with_value_to_string(percent_to_string())
-        .with_string_to_value(percent_from_string())
+        .with_value_to_string(text::percent())
+        .with_string_to_value(text::parse_percent())
 }
 fn time(name: &str, default: f32) -> FloatParam {
     FloatParam::new(
@@ -229,8 +182,8 @@ fn time(name: &str, default: f32) -> FloatParam {
             factor: FloatRange::skew_factor(-2.0),
         },
     )
-    .with_value_to_string(time_to_string())
-    .with_string_to_value(time_from_string())
+    .with_value_to_string(text::milliseconds_then_seconds())
+    .with_string_to_value(text::parse_time())
 }
 
 /// **The clock period's tempo sync** (`plans/plan-tempo-sync-controls.md`): 1/64 to four bars, the
@@ -443,8 +396,8 @@ impl Default for MxmMono08Params {
                     factor: FloatRange::skew_factor(-2.0),
                 },
             )
-            .with_value_to_string(time_to_string())
-            .with_string_to_value(time_from_string()),
+            .with_value_to_string(text::milliseconds_then_seconds())
+            .with_string_to_value(text::parse_time()),
             bend_range: FloatParam::new(
                 "Bend range",
                 2.0,
@@ -482,8 +435,8 @@ impl MxmMono08Params {
 
     /// Every parameter in host declaration order. This is also the editor's future complete testing
     /// surface and the preset file order, so those consumers cannot quietly disagree.
-    pub fn all_parameters(&self) -> Vec<(&'static str, &dyn mxm_preset::ErasedParam)> {
-        let mut out: Vec<(&'static str, &dyn mxm_preset::ErasedParam)> = vec![
+    pub fn all_parameters(&self) -> Vec<(&'static str, &dyn mxm_params::ErasedParam)> {
+        let mut out: Vec<(&'static str, &dyn mxm_params::ErasedParam)> = vec![
             ("complexfreq", &self.complex_frequency),
             ("complexendpoint", &self.complex_endpoint),
             ("wavemix", &self.wave_mix),
@@ -596,31 +549,18 @@ mod tests {
         0.9994, 0.9995, 0.9996, 0.99995, 1.0, 1.004, 1.005, 1.006,
     ];
 
-    /// **Every parameter's text survives the host's own conversion.** The CLAP wrapper formats a
-    /// normalised value, parses the text back to a normalised value and formats that again, so a
-    /// reading that chooses its unit or its sign from the raw value can print one text, parse to the
-    /// other side of its own switch and print another — which `clap-validator`'s
-    /// `param-conversions` fails only when its values land in that sliver, so a clean run proves
-    /// nothing (mxm-kit's `docs/code-review-notes.md` §6). This walks every parameter, with the unit
-    /// on as the host sees it, across clap-validator 0.4.1's own grid, the collection's `i / 19`
-    /// grid, and the normalised neighbours of every value in [`BOUNDARIES`] — once in each
-    /// modulation range, because the frequency reads in the one selected.
+    /// **Every parameter's text survives the host's round trip**, with the unit on, across the
+    /// collection's grids and switch points (`mxm_plugin_test::text_checks`) in both modulation
+    /// ranges, whose readings differ, plus both sides of every value in [`BOUNDARIES`].
     #[test]
-    fn every_parameter_text_is_idempotent_through_the_hosts_conversion() {
-        let mut failures: Vec<String> = Vec::new();
+    fn every_parameter_text_survives_the_hosts_round_trip() {
         for high in [false, true] {
             let params = MxmMono08Params::default();
             if high {
                 set_mod_high(&params);
             }
-            walk_every_parameter_text(&params, &mut failures);
+            mxm_plugin_test::text_checks::every_text_round_trips(&params, &BOUNDARIES);
         }
-        assert!(
-            failures.is_empty(),
-            "{} parameter texts changed through the host's conversion:\n{}",
-            failures.len(),
-            failures.join("\n")
-        );
     }
 
     /// Selects the high range the way a host does, so the switch's callback runs.
@@ -629,45 +569,6 @@ mod tests {
         // SAFETY: `params` owns the switch and outlives the call.
         unsafe {
             ptr._internal_set_normalized_value(1.0);
-        }
-    }
-
-    fn walk_every_parameter_text(params: &MxmMono08Params, failures: &mut Vec<String>) {
-        let map = params.param_map();
-        let validator_values = 4_000_usize.div_ceil(map.len()).clamp(5, 100);
-        for (id, ptr, _group) in &map {
-            // SAFETY: `params` owns every parameter these pointers refer to and outlives the loop;
-            // this is the same access `param-conversions` makes through CLAP.
-            unsafe {
-                // The wrapper hands CLAP `normalised × step count` and divides by it on the way in.
-                let steps = ptr.step_count().unwrap_or(1) as f64;
-                let from_clap = |value: f64| value as f32 / steps as f32;
-                let grid = (0..=19).map(|i| (i as f32 / 19.0, "grid"));
-                let validator = (0..validator_values).map(|i| {
-                    let value = steps * (i as f64 / (validator_values - 1) as f64);
-                    (from_clap(value), "validator grid")
-                });
-                let boundary = BOUNDARIES.into_iter().flat_map(|plain| {
-                    let at = ptr.preview_normalized(plain).clamp(0.0, 1.0);
-                    [at.next_down().max(0.0), at, at.next_up().min(1.0)].map(|n| (n, "boundary"))
-                });
-                for (value, from) in grid.chain(validator).chain(boundary) {
-                    let first = ptr.normalized_value_to_string(value, true);
-                    let second = ptr.string_to_normalized_value(&first).map(|parsed| {
-                        ptr.normalized_value_to_string(from_clap(parsed as f64 * steps), true)
-                    });
-                    if second.as_deref() != Some(first.as_str()) {
-                        let failure = format!("{id}: {first:?} reads back as {second:?}");
-                        if failures
-                            .last()
-                            .is_none_or(|last| !last.starts_with(&failure))
-                        {
-                            let plain = ptr.preview_plain(value);
-                            failures.push(format!("{failure} ({from}, plain {plain})"));
-                        }
-                    }
-                }
-            }
         }
     }
 

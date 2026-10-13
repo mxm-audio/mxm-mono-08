@@ -1046,8 +1046,8 @@ impl Routes {
     ///
     /// **Presets carry routing**, presences included, or a sound would load with somebody else's
     /// routes still in it.
-    pub fn parameters(&self) -> Vec<(&'static str, &dyn mxm_preset::ErasedParam)> {
-        let mut out: Vec<(&'static str, &dyn mxm_preset::ErasedParam)> = Vec::with_capacity(
+    pub fn parameters(&self) -> Vec<(&'static str, &dyn mxm_params::ErasedParam)> {
+        let mut out: Vec<(&'static str, &dyn mxm_params::ErasedParam)> = Vec::with_capacity(
             ((CV_DESTINATIONS - 1) * CV_SOURCES + CV_SOURCES - 1) * 2
                 + PULSE_DESTINATIONS * PULSE_SOURCES,
         );

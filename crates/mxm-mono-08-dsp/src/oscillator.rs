@@ -292,13 +292,8 @@ mod tests {
         }
     }
     fn tone_level(x: &[f32], hz: f32, fs: f32) -> f64 {
-        let (mut re, mut im) = (0., 0.);
-        for (i, &v) in x.iter().enumerate() {
-            let a = std::f64::consts::TAU * hz as f64 * i as f64 / fs as f64;
-            re += v as f64 * a.cos();
-            im += v as f64 * a.sin();
-        }
-        2.0 * (re * re + im * im).sqrt() / x.len() as f64
+        mxm_measure::spectrum::component_amplitude(x, f64::from(hz), f64::from(fs))
+            .expect("a finite, non-empty render")
     }
     #[test]
     fn the_complex_cores_are_separate_state() {

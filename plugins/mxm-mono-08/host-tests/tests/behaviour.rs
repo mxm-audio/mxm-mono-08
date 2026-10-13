@@ -3,7 +3,6 @@
 //! Bundle-dependent tests skip with the build command instead of linking product-specific code
 //! into the player. Build first with `cargo xtask bundle mxm-mono-08 --release`.
 
-use mxm_player::events::input::Payload;
 use mxm_player::session::{FRAMES_PER_BLOCK, Session};
 use mxm_player_harness::app_harness;
 
@@ -14,9 +13,7 @@ use std::path::PathBuf;
 const PLUGIN: &str = "dk.mxm.mxm-mono-08";
 const SKIP: &str = "skipping: run `cargo xtask bundle mxm-mono-08 --release`";
 fn bundle() -> Option<(PathBuf, PathBuf)> {
-    let dir = app_harness::any_bundled_dir()?;
-    let file = dir.join("mxm-mono-08.clap");
-    file.exists().then_some((dir, file))
+    mxm_player_harness::host_test::plugin_bundle("mxm-mono-08")
 }
 fn session(name: &str) -> Option<Session> {
     let (dir, file) = bundle()?;
@@ -62,15 +59,7 @@ fn brightness(x: &[f32]) -> f32 {
     x.windows(2).map(|w| (w[1] - w[0]).abs()).sum::<f32>() / (x.len() - 1) as f32
 }
 fn set(s: &mut Session, name: &str, fraction: f64) {
-    let p = s
-        .state()
-        .param(name)
-        .unwrap_or_else(|| panic!("missing {name}"))
-        .clone();
-    s.app().engine_mut().push_gui_event(Payload::ParamValue {
-        param_id: p.id,
-        value: p.min + fraction * (p.max - p.min),
-    });
+    mxm_player_harness::host_test::push_fraction(s, name, fraction);
     s.advance_blocks(4).unwrap();
 }
 fn capture(s: &mut Session, blocks: u64) -> Vec<f32> {
