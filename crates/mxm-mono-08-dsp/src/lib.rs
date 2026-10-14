@@ -76,24 +76,6 @@ impl<const N: usize> Default for Memo<N> {
     }
 }
 
-/// Deterministic xorshift generator. A zero seed is replaced because it is a fixed point.
-#[derive(Debug, Clone)]
-pub struct Rng(u32);
-
-impl Rng {
-    pub const fn new(seed: u32) -> Self {
-        Self(if seed == 0 { 0x9e37_79b9 } else { seed })
-    }
-
-    #[inline]
-    pub fn unipolar(&mut self) -> f32 {
-        self.0 ^= self.0 << 13;
-        self.0 ^= self.0 >> 17;
-        self.0 ^= self.0 << 5;
-        (self.0 >> 8) as f32 / 16_777_216.0
-    }
-}
-
 /// Bounded odd soft clip used only where a provisional analogue drive is named.
 #[inline]
 pub fn soft_clip(x: f32) -> f32 {
@@ -106,6 +88,16 @@ pub fn soft_clip(x: f32) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn housekeeping_is_bounded_and_exact() {
+        assert_eq!(flush(1e-30), 0.0);
+        assert_eq!(flush(-0.25), -0.25);
+        for i in -10_000..=10_000 {
+            let y = soft_clip(i as f32);
+            assert!(y.is_finite() && y.abs() <= 1.0);
+        }
+    }
 
     /// **A hit returns exactly what recomputing returns.** Everything the memoised sites claim
     /// rests on this one property: each adopted it by wrapping an expression in `get`, so if `get`
@@ -150,21 +142,5 @@ mod tests {
             });
         }
         assert_eq!(calls, 8, "a NaN key must always miss");
-    }
-
-    #[test]
-    fn housekeeping_is_bounded_deterministic_and_exact() {
-        assert_eq!(flush(1e-30), 0.0);
-        assert_eq!(flush(-0.25), -0.25);
-        let (mut a, mut b) = (Rng::new(0x208), Rng::new(0x208));
-        for _ in 0..10_000 {
-            let x = a.unipolar();
-            assert_eq!(x, b.unipolar());
-            assert!((0.0..1.0).contains(&x));
-        }
-        for i in -10_000..=10_000 {
-            let y = soft_clip(i as f32);
-            assert!(y.is_finite() && y.abs() <= 1.0);
-        }
     }
 }

@@ -140,7 +140,7 @@ exactly one, so low-range renders stay bit-identical
 
 Full text: [NOTES.md § Numeric and realtime contract](NOTES.md#numeric-and-realtime-contract-in-full).
 
-- `[dependencies]` is exactly `mxm-modulation` (dependency-free at the 1.87 floor). `mxm-measure`,
+- `[dependencies]` is exactly `mxm-modulation` and `mxm-rng` (dependency-free at the 1.87 floor). `mxm-measure`,
   `mxm-audio-file`, `mxm-audio-file-decode` and `mxm-modulation`'s `conformance` feature are
   dev-only; this crate's `conformance` feature forwards it for the plugin's tests. None reaches a bundle.
 - Per-sample methods allocate and lock nothing; delay memory is sized by `set_sample_rate`.

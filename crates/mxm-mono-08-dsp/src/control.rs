@@ -2,7 +2,7 @@
 //! Behaviour comes from `research:modulation/buchla-208-control-sources.md`; every unknown policy is
 //! named in the crate AGENTS.md.
 
-use crate::Rng;
+use mxm_rng::Xorshift32;
 
 pub const MIN_TIME_S: f32 = 0.002;
 pub const MAX_TIME_S: f32 = 10.0;
@@ -203,7 +203,7 @@ impl Sequencer {
 #[derive(Debug, Clone)]
 pub struct RandomVoltages {
     values: [f32; 4],
-    rng: Rng,
+    rng: Xorshift32,
 }
 impl Default for RandomVoltages {
     fn default() -> Self {
@@ -214,7 +214,7 @@ impl RandomVoltages {
     pub const fn new() -> Self {
         Self {
             values: [0.0; 4],
-            rng: Rng::new(0x0208_1973),
+            rng: Xorshift32::new(0x0208_1973),
         }
     }
     pub fn reset(&mut self) {
@@ -222,7 +222,7 @@ impl RandomVoltages {
     }
     pub fn trigger(&mut self) {
         for v in &mut self.values {
-            *v = self.rng.unipolar();
+            *v = self.rng.unit_f32();
         }
     }
     pub fn values(&self) -> [f32; 4] {

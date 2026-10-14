@@ -141,7 +141,7 @@ breaks another is a broken change. CI builds and tests on all three, only when s
 
 | Crate | MSRV | Why |
 |---|---|---|
-| `crates/mxm-mono-08-dsp` | **1.87** | The 1973-card-set voice, five-stage CV/pulse sequencer, built-in spring and its routing. **One runtime dependency**, `mxm-modulation`, dependency-free at this same floor — the routing conversion added it |
+| `crates/mxm-mono-08-dsp` | **1.87** | The 1973-card-set voice, five-stage CV/pulse sequencer, built-in spring and its routing. **Two runtime dependencies**, `mxm-modulation` and `mxm-rng`, both dependency-free at this same floor — the routing conversion and the shared generators added them |
 | `plugins/mxm-mono-08` | **1.95** | Its dynamically paged editor pulls in egui |
 
 ## Licensing
