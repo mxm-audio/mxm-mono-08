@@ -216,8 +216,8 @@ spring to decay. Randomness and reset are deterministic.
 ## Measurement and test coverage
 
 **The rulers are shared, the thresholds are not.** `mxm-measure` is a `[dev-dependencies]` entry —
-zero dependencies at this same 1.87 floor, and **not in the shipped graph**, which is what the
-manifest's *no runtime dependencies* comment means. Measurements come from there; every bound and
+zero dependencies at this same 1.87 floor, and **not in the shipped graph**: the manifest's runtime dependencies
+are the kit's dependency-free crates alone. Measurements come from there; every bound and
 its headroom stays in the test that argues for it.
 
 The tests cover exact idle/master-zero silence, reset/panic/choke, denormal flushing, rates from
