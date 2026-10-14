@@ -4,6 +4,7 @@
 //! bounded dispersive two-path model in the compatible replacement tank's published decay class.
 
 use crate::soft_clip;
+use mxm_dsp::delay::AgeLine;
 use mxm_dsp::guard::flush;
 
 pub const TRANSITS_MS: [f32; 2] = [31.0, 43.0]; // Chosen.
@@ -57,41 +58,30 @@ fn ap_coef(hz: f32, fs: f32) -> f32 {
 
 #[derive(Debug, Clone)]
 struct Path {
-    line: Vec<f32>,
-    write: usize,
-    valid: usize,
+    /// The collection's `mxm_dsp::delay::AgeLine`: zero past what was written since the last reset.
+    line: AgeLine,
     aps: [AllPass; DISPERSION_STAGES],
 }
 impl Path {
     fn new(fs: f32) -> Self {
         Self {
-            line: vec![0.; (TRANSITS_MS[1] * 0.001 * fs).ceil() as usize + 32],
-            write: 0,
-            valid: 0,
+            line: AgeLine::new((TRANSITS_MS[1] * 0.001 * fs).ceil() as usize + 32),
             aps: [AllPass::default(); DISPERSION_STAGES],
         }
     }
     fn reset(&mut self) {
-        self.write = 0;
-        self.valid = 0;
+        self.line.clear();
         for a in &mut self.aps {
             a.reset();
         }
     }
     fn process(&mut self, x: f32, delay: usize, feedback: f32, a: f32) -> f32 {
-        let n = self.line.len();
-        let d = delay.clamp(1, n - 1);
-        let mut y = if d > self.valid {
-            0.
-        } else {
-            self.line[(self.write + n - d) % n]
-        };
+        let d = delay.clamp(1, self.line.capacity() - 1);
+        let mut y = self.line.read(d);
         for ap in &mut self.aps {
             y = ap.process(y, a);
         }
-        self.line[self.write] = flush(x + y * feedback);
-        self.write = (self.write + 1) % n;
-        self.valid = (self.valid + 1).min(n);
+        self.line.push(flush(x + y * feedback));
         y
     }
 }
@@ -218,7 +208,7 @@ mod tests {
             !s.active(),
             "spring remained armed; quiet={} valid={:?}",
             s.quiet,
-            s.paths.iter().map(|p| p.valid).collect::<Vec<_>>()
+            s.paths.iter().map(|p| p.line.written()).collect::<Vec<_>>()
         );
     }
     #[test]

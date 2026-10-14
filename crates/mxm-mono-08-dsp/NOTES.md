@@ -189,7 +189,8 @@ this same floor, so MSRV stays 1.87 and the crate stays genuinely portable; `[de
 for `easel_demo`'s write and read-back, not in the shipped graph — and `mxm-modulation` again with
 its `conformance` feature, which this crate's own `conformance` feature also forwards for the
 plugin's tests; neither reaches a bundle. Per-sample methods allocate and lock nothing. Delay
-memory is sized by `set_sample_rate`, outside processing. Audio is `f32`; recursive coefficients and
+memory is sized by `set_sample_rate`, outside processing; the spring's two paths store their samples
+in `mxm-dsp`'s `AgeLine` (the audit's O2, proved bit-identical to the rings they replaced). Audio is `f32`; recursive coefficients and
 linear portamento accumulation are `f64`. Every external plain value is clamped at its consumer;
 recursive state flushes before denormals, and `voice::OUTPUT_BOUND` is the asserted output bound.
 Reset and All Sound Off clear pulses, control state, gates and spring without resizing delay memory;
