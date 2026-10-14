@@ -5,7 +5,8 @@
 //! curves and timing are unmeasured; the constants below are chosen and deliberately are not the
 //! published 292/VTL5C3 model constants.
 
-use crate::{Memo, flush};
+use crate::Memo;
+use mxm_dsp::guard::flush;
 
 pub const OPTICAL_RISE_S: f64 = 0.008;
 pub const OPTICAL_FALL_S: f64 = 0.220;

@@ -7,7 +7,8 @@
 //! 8×. Discontinuous endpoint and modulation-oscillator waves use PolyBLEP at their own sample
 //! rate. AM and balanced multiplication are intentionally not described as oversampled.
 
-use crate::{flush, soft_clip};
+use crate::soft_clip;
+use mxm_dsp::guard::flush;
 
 pub const OVERSAMPLE: usize = 4;
 pub const CORE8_RATIO: f64 = 1.0007; // Chosen calibration mismatch, not an original measurement.

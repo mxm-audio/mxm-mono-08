@@ -5,7 +5,6 @@
 //! point reads `CvFrame`'s preceding sample, making every backward route a one-sample delay.
 
 use crate::control::{Envelope, EnvelopeMode, Pulser, RandomVoltages, Sequencer};
-use crate::flush;
 use crate::lpg::{GateMode, LowPassGate};
 use crate::oscillator::{
     ComplexEndpoint, ComplexInput, ComplexOscillator, ModWave, ModulationOscillator, am_crossfade,
@@ -15,6 +14,7 @@ use crate::routing::{
     PulseDestination, PulseSource, Routing, complement,
 };
 use crate::spring::Spring;
+use mxm_dsp::guard::flush;
 use mxm_modulation::standard;
 
 pub const OUTPUT_BOUND: f32 = 8.0;

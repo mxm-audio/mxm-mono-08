@@ -183,8 +183,8 @@ All implementation values absent from hardware evidence remain replaceable:
 
 ## Numeric and realtime contract, in full
 
-`[dependencies]` carries exactly `mxm-modulation` and `mxm-rng`, each dependency-free at this same
-floor, so MSRV stays 1.87 and the crate stays genuinely portable; `[dev-dependencies]` carries
+`[dependencies]` carries exactly `mxm-modulation`, `mxm-rng` and `mxm-dsp`, each dependency-free at
+this same floor, so MSRV stays 1.87 and the crate stays genuinely portable; `[dev-dependencies]` carries
 `mxm-measure`, `mxm-audio-file` and `mxm-audio-file-decode` — test-only edges for measurements and
 for `easel_demo`'s write and read-back, not in the shipped graph — and `mxm-modulation` again with
 its `conformance` feature, which this crate's own `conformance` feature also forwards for the

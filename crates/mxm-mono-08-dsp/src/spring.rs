@@ -3,7 +3,8 @@
 //! Card 12 establishes mono voltage drive and placement; no original tank was measured. This is a
 //! bounded dispersive two-path model in the compatible replacement tank's published decay class.
 
-use crate::{flush, soft_clip};
+use crate::soft_clip;
+use mxm_dsp::guard::flush;
 
 pub const TRANSITS_MS: [f32; 2] = [31.0, 43.0]; // Chosen.
 pub const T60_S: f32 = 2.3; // Chosen within replacement tank's published 1.75-3.0 s class.

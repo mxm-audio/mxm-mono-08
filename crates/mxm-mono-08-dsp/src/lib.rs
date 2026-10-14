@@ -23,12 +23,6 @@ pub mod voice;
 /// (1 kHz) ask for.
 pub const MIN_SAMPLE_RATE: f32 = 1_000.0;
 
-/// Flush recursive state before it can become denormal; about -400 dB for `f32`.
-#[inline(always)]
-pub fn flush(x: f32) -> f32 {
-    if x.abs() < 1e-20 { 0.0 } else { x }
-}
-
 /// A one-entry memo for a per-sample transcendental whose argument rarely changes.
 ///
 /// **It is a cost device, never a numeric one.** A hit returns the value the memoised expression
@@ -90,9 +84,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn housekeeping_is_bounded_and_exact() {
-        assert_eq!(flush(1e-30), 0.0);
-        assert_eq!(flush(-0.25), -0.25);
+    fn soft_clip_is_bounded_and_finite() {
         for i in -10_000..=10_000 {
             let y = soft_clip(i as f32);
             assert!(y.is_finite() && y.abs() <= 1.0);
