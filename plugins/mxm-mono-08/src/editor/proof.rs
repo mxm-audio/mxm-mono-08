@@ -1432,7 +1432,6 @@ fn private_state_starts_clean_and_developer_requests_change_only_editor_state() 
         Arc::clone(&actions),
     );
     assert_eq!(app.view, 0);
-    assert!(app.gui_context.is_none());
     assert!(app.text_entry.is_empty());
     assert_eq!(app.waveform.capacity(), WAVEFORM_LEN);
     assert!(!telemetry.editor_open());

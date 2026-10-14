@@ -17,7 +17,6 @@ use mxm_ui::space::SPACE_4;
 use mxm_ui::theme::Tokens;
 use nice_plug::context::gui::GuiContext;
 use nice_plug::prelude::*;
-use nice_plug_egui::{EguiEditorState, NiceEguiApp, create_egui_editor};
 
 use crate::actions::TransientActions;
 use crate::params::MxmMono08Params;
@@ -39,7 +38,7 @@ const SEQUENCER_TITLES: [&str; 2] = ["Sequencer", "Steps"];
 #[cfg(test)]
 const CARDS: usize = 11;
 
-pub type MxmMono08Editor = nice_plug_egui::EguiEditor<MxmMono08App>;
+pub type MxmMono08Editor = mxm_editor::Editor<MxmMono08App>;
 
 #[cfg(debug_assertions)]
 fn arm_real_host_once_probe(
@@ -90,23 +89,10 @@ pub fn create(
 ) -> Option<MxmMono08Editor> {
     #[cfg(debug_assertions)]
     arm_real_host_once_probe(Arc::clone(&actions), executor.clone());
-    let state = EguiEditorState::from_size(
-        nice_plug::editor::dpi::LogicalSize::new(REFERENCE.0, REFERENCE.1),
-        1.0,
-    );
-    create_egui_editor(
-        state,
-        nice_plug_egui::RepaintNotifier::new(),
-        nice_plug_egui::EguiNiceSettings {
-            title: crate::NAME.to_owned(),
-            resize_hint: ResizeHint {
-                size_constraints: nice_plug::editor::SizeConstraints::min_logical_size(
-                    nice_plug::editor::dpi::LogicalSize::new(MINIMUM.0 as f32, MINIMUM.1 as f32),
-                ),
-                ..ResizeHint::RESIZABLE
-            },
-            ..Default::default()
-        },
+    mxm_editor::create(
+        crate::NAME,
+        REFERENCE,
+        MINIMUM,
         MxmMono08App::with_executor(params, telemetry, actions, executor),
     )
 }
@@ -118,7 +104,6 @@ pub struct MxmMono08App {
     telemetry: Arc<Telemetry>,
     actions: Arc<TransientActions>,
     executor: Option<AsyncExecutor<crate::MxmMono08>>,
-    gui_context: Option<GuiContext>,
     view: usize,
     text_entry: HashMap<&'static str, Option<String>>,
     presets: PresetUi,
@@ -140,7 +125,6 @@ impl MxmMono08App {
             telemetry,
             actions,
             executor: None,
-            gui_context: None,
             view: 0,
             text_entry: HashMap::new(),
             presets,
@@ -161,23 +145,12 @@ impl MxmMono08App {
     }
 }
 
-impl NiceEguiApp for MxmMono08App {
-    fn build(
-        &mut self,
-        egui_ctx: egui::Context,
-        nice_gui_ctx: GuiContext,
-        _frame: &mut nice_plug_egui::Frame,
-    ) -> Result<(), nice_plug_egui::baseview::HandlerError> {
-        mxm_ui::shell::install(&egui_ctx);
-        self.gui_context = Some(nice_gui_ctx);
+impl mxm_editor::Panel for MxmMono08App {
+    fn opened(&mut self, _egui_ctx: &egui::Context, _nice_gui_ctx: &GuiContext) {
         self.telemetry.set_editor_open(true);
-        Ok(())
     }
 
-    fn ui(&mut self, ui: &mut Ui, _frame: &mut nice_plug_egui::Frame) {
-        let Some(context) = self.gui_context.clone() else {
-            return;
-        };
+    fn ui(&mut self, ui: &mut Ui, context: &GuiContext) {
         self.telemetry.waveform_snapshot(&mut self.waveform);
         let wake = || {
             if let Some(executor) = &self.executor {
@@ -199,9 +172,8 @@ impl NiceEguiApp for MxmMono08App {
         );
     }
 
-    fn editor_closed(&mut self) {
+    fn closed(&mut self, _host: &GuiContext) {
         self.telemetry.set_editor_open(false);
-        self.gui_context = None;
     }
 }
 
