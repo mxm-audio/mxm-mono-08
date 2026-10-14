@@ -436,10 +436,7 @@ pub const fn init_present(destination: usize, source: usize) -> bool {
 /// on its offer's fader, reading what the pair delivers.
 fn amount(destination: usize, source: usize) -> FloatParam {
     reading::amount_param_at(
-        format!(
-            "{} from {}",
-            DESTINATION_NAMES[destination], SOURCE_NAMES[source]
-        ),
+        reading::amount_name(DESTINATION_NAMES[destination], SOURCE_NAMES[source]),
         init_amount(destination, source),
         reach(destination, source),
         fader(destination, source),
@@ -499,9 +496,9 @@ fn fader(destination: usize, source: usize) -> Fader {
 /// wiring: Gate 1 from the envelope, and nothing else.
 fn present(destination: usize, source: usize) -> BoolParam {
     BoolParam::new(
-        format!(
-            "{} from {} on",
-            DESTINATION_NAMES[destination], SOURCE_NAMES[source]
+        mxm_modulation_params::reading::presence_name(
+            DESTINATION_NAMES[destination],
+            SOURCE_NAMES[source],
         ),
         init_present(destination, source),
     )
@@ -1085,6 +1082,21 @@ mod tests {
     use super::*;
 
     use mxm_plugin_test::routing_checks;
+
+    /// The route names a host shows, pinned to the format they had before the collection's shared
+    /// `reading::amount_name`/`presence_name` built them (the architecture audit's O7).
+    #[test]
+    fn route_names_are_unchanged_by_the_shared_names() {
+        for (destination, d) in DESTINATION_NAMES.iter().enumerate() {
+            for (source, s) in SOURCE_NAMES.iter().enumerate() {
+                assert_eq!(amount(destination, source).name(), format!("{d} from {s}"));
+                assert_eq!(
+                    present(destination, source).name(),
+                    format!("{d} from {s} on")
+                );
+            }
+        }
+    }
 
     /// **Every route parameter says what the DSP does** — the modulation standard's plugin half:
     /// a pair has a parameter exactly where it is offered (the inverter's own pair nowhere), its
