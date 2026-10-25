@@ -226,8 +226,6 @@ The tests cover exact idle/master-zero silence, reset/panic/choke, denormal flus
 comparison, envelope/pulser linearity, all sequence lengths, held random outputs, routing causality,
 all LPG modes, spring arrival/tail, pressure and tuning ownership,
 memoised-coefficient transparency against an unmemoised reference, and
-deterministic whole-voice renders. Linux and macOS remain
-unverified because there is no CI; development verification is Windows.
-*Since the split (2026-10-06):* CI runs the tests on Windows, macOS and Linux on a `v*` release tag
-or when started by hand, and Linux is checked in WSL before every push (root *Windows, Linux and
-macOS*).
+deterministic whole-voice renders. Development verification is Windows; CI runs the tests on
+Windows, macOS and Linux when started by hand, and the cross-platform batch runs them in WSL and on
+a Mac (root *Windows, Linux and macOS*).

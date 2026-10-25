@@ -499,8 +499,7 @@ page fit.
 
 The host suite covers the real bundle, its 350-parameter surface, keyed sound, parameter delivery,
 five-stage sequencing, event-offset splitting, activity/tails, debug allocation assertions, hostile
-rates and legal callback sizes, and the pinned real-host render. Design-system §15 visual review,
-real-DAW parenting/resizing, Linux and macOS remain manual because this repository has no CI.
-*Since the split (2026-10-06):* CI runs the tests and the host suite on Windows, macOS and Linux on a
-`v*` release tag or when started by hand, Linux is checked in WSL before every push, and the pinned
-render's digest is compared on Windows only. Visual review and a real DAW stay manual.
+rates and legal callback sizes, and the pinned real-host render. CI runs the tests and the host
+suite on Windows, macOS and Linux when started by hand, and the pinned render's digest is compared
+on Windows only. Design-system §15 visual review, real-DAW parenting and resizing, and Linux and
+macOS by hand stay manual.
