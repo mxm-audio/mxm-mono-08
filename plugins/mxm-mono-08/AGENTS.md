@@ -163,7 +163,8 @@ same whole semitones and octaves, on a step fader whole semitones coarse and the
 - Regenerate presets only through
   `cargo test -p mxm-mono-08 --lib write_the_factory_presets -- --ignored`; the default tests prove
   files match the readable design exactly. A rename changes the filename the generator derives, and
-  it **does not delete the old file** — remove the orphan and move `FACTORY_FILES` in the same step.
+  it **does not delete the old file** — remove the orphan and change its name in
+  `presets/order.txt` in the same step.
 - **Choose a design's numbers from `the_mapping_table`** (`#[ignore]`d in `preset.rs`), not a hunch.
 - Bundle before player tests. A debug bundle is required for `assert_process_allocs`; release alone
   does not prove realtime allocation safety.

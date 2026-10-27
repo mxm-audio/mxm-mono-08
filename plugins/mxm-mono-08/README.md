@@ -14,8 +14,8 @@ keeps the audio path visible, `Mod` exposes weighted CV and pulse routing withou
 cargo xtask bundle mxm-mono-08 --release
 ```
 
-The loadable bundle is written to `target/bundled/mxm-mono-08.clap` with `control-map.json` beside
-it. It offers stereo and mono out, with no audio input.
+The loadable bundle is written to `target/bundled/mxm-mono-08.clap` with `control-map.json` and the
+factory presets beside it. It offers stereo and mono out, with no audio input.
 
 ## Licence
 

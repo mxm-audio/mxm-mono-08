@@ -22,8 +22,13 @@ impl mxm_preset::Instrument for MxmMono08Params {
     fn identity(&self) -> &RwLock<PresetIdentity> {
         &self.preset
     }
-    fn factory_files(&self) -> &'static [(&'static str, &'static str)] {
+    /// The installed set, but in a unit test, which is loaded from no bundle: the repository's.
+    #[cfg(test)]
+    fn factory_files(&self) -> Vec<(String, String)> {
         FACTORY_FILES
+            .iter()
+            .map(|(name, json)| ((*name).to_owned(), (*json).to_owned()))
+            .collect()
     }
     /// The modulation oscillator's high range came after preset files existed (2026-09-23). A file
     /// that does not name it was written for the one range there was, so it loads in the low range
@@ -35,117 +40,22 @@ impl mxm_preset::Instrument for MxmMono08Params {
     }
 }
 
-/// The shipped bank, in the order `FACTORY_DESIGN` states it.
-///
-/// Generated — never hand-edited. `write_the_factory_presets` writes the files and
-/// `shipped_files_are_exactly_the_readable_design` proves this list and those files still
-/// say what the design says.
-pub const FACTORY_FILES: &[(&str, &str)] = &[
-    ("Struck bell", include_str!("../presets/struck-bell.json")),
-    ("Wood block", include_str!("../presets/wood-block.json")),
-    ("Metal ring", include_str!("../presets/metal-ring.json")),
-    ("Gong wash", include_str!("../presets/gong-wash.json")),
-    ("Tin cascade", include_str!("../presets/tin-cascade.json")),
-    ("Iron pulse", include_str!("../presets/iron-pulse.json")),
-    ("Hollow key", include_str!("../presets/hollow-key.json")),
-    ("Glass keys", include_str!("../presets/glass-keys.json")),
-    ("Soft strike", include_str!("../presets/soft-strike.json")),
-    ("Reed key", include_str!("../presets/reed-key.json")),
-    ("Clear pluck", include_str!("../presets/clear-pluck.json")),
-    ("Wire pluck", include_str!("../presets/wire-pluck.json")),
-    ("Gut pluck", include_str!("../presets/gut-pluck.json")),
-    ("Harp ping", include_str!("../presets/harp-ping.json")),
-    ("Muted pick", include_str!("../presets/muted-pick.json")),
-    ("Round bass", include_str!("../presets/round-bass.json")),
-    ("Tight bass", include_str!("../presets/tight-bass.json")),
-    ("Folded bass", include_str!("../presets/folded-bass.json")),
-    ("Growl bass", include_str!("../presets/growl-bass.json")),
-    (
-        "Pressure bloom",
-        include_str!("../presets/pressure-bloom.json"),
-    ),
-    ("Long spring", include_str!("../presets/long-spring.json")),
-    (
-        "Breathing air",
-        include_str!("../presets/breathing-air.json"),
-    ),
-    ("Wide swell", include_str!("../presets/wide-swell.json")),
-    ("Mod motion", include_str!("../presets/mod-motion.json")),
-    ("Narrow lead", include_str!("../presets/narrow-lead.json")),
-    ("Singing lead", include_str!("../presets/singing-lead.json")),
-    ("Pulser drone", include_str!("../presets/pulser-drone.json")),
-    (
-        "Mod oscillator drone",
-        include_str!("../presets/mod-oscillator-drone.json"),
-    ),
-    (
-        "Low pulse drone",
-        include_str!("../presets/low-pulse-drone.json"),
-    ),
-    ("Random hold", include_str!("../presets/random-hold.json")),
-    (
-        "Inverted motion",
-        include_str!("../presets/inverted-motion.json"),
-    ),
-    ("Beating pair", include_str!("../presets/beating-pair.json")),
-    ("Rain on tin", include_str!("../presets/rain-on-tin.json")),
-    (
-        "Two step climb",
-        include_str!("../presets/two-step-climb.json"),
-    ),
-    (
-        "Three step fall",
-        include_str!("../presets/three-step-fall.json"),
-    ),
-    (
-        "Four step arch",
-        include_str!("../presets/four-step-arch.json"),
-    ),
-    (
-        "Five step rise",
-        include_str!("../presets/five-step-rise.json"),
-    ),
-    ("Sparse steps", include_str!("../presets/sparse-steps.json")),
-    (
-        "Pulse staircase",
-        include_str!("../presets/pulse-staircase.json"),
-    ),
-    ("Stage tempo", include_str!("../presets/stage-tempo.json")),
-    (
-        "Random sequence",
-        include_str!("../presets/random-sequence.json"),
-    ),
-    (
-        "Gliding sequence",
-        include_str!("../presets/gliding-sequence.json"),
-    ),
-    ("Stage timbre", include_str!("../presets/stage-timbre.json")),
-    (
-        "Pressure bend",
-        include_str!("../presets/pressure-bend.json"),
-    ),
-    (
-        "Wheel opening",
-        include_str!("../presets/wheel-opening.json"),
-    ),
-    (
-        "Feedback sheen",
-        include_str!("../presets/feedback-sheen.json"),
-    ),
-    ("Ring clang", include_str!("../presets/ring-clang.json")),
-    (
-        "Random bleeps",
-        include_str!("../presets/random-bleeps.json"),
-    ),
-    (
-        "Inverter duck",
-        include_str!("../presets/inverter-duck.json"),
-    ),
-    (
-        "Patch laboratory",
-        include_str!("../presets/patch-laboratory.json"),
-    ),
-];
+/// The factory set as it ships, `(name, json)` in its order: the repository's `presets/`, which
+/// is installed beside the plugin and read there (`mxm_preset::installed_factory_dir`). For the
+/// tests, the integration tests and the audits, which are loaded from no bundle; the plugin itself
+/// never reads it.
+pub static FACTORY_FILES: std::sync::LazyLock<Vec<(&'static str, &'static str)>> =
+    std::sync::LazyLock::new(|| {
+        let folder = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("presets");
+        mxm_preset::read_factory_dir(&folder)
+            .into_iter()
+            .map(|(file, json)| {
+                let name = mxm_preset::Preset::parse(&json, crate::CLAP_ID)
+                    .map_or(file, |preset| preset.name);
+                (&*String::leak(name), &*String::leak(json))
+            })
+            .collect()
+    });
 
 #[cfg(test)]
 mod tests {
@@ -1726,7 +1636,7 @@ mod tests {
     fn every_file_is_complete_distinct_categorised_and_owned() {
         let p = params();
         let mut seen = Vec::new();
-        for (name, text) in FACTORY_FILES {
+        for (name, text) in FACTORY_FILES.iter() {
             let preset =
                 Preset::parse(text, crate::CLAP_ID).unwrap_or_else(|e| panic!("{name}: {e}"));
             assert_eq!(&preset.name, name);
@@ -1741,7 +1651,7 @@ mod tests {
     }
     #[test]
     fn every_sound_keeps_an_audible_output_path() {
-        for (name, text) in FACTORY_FILES {
+        for (name, text) in FACTORY_FILES.iter() {
             let p = Preset::parse(text, crate::CLAP_ID).unwrap();
             let v = |id: &str| p.params[id].v;
             assert!(v("mix1") > 0.05 || v("mix2") > 0.05, "{name}");
